@@ -31,13 +31,20 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            width: 100px; /* Pas dit aan naar je gewenste formaat */
+            width: 100px;
         }
 
         .info {
             position: absolute;
             left: 20px;
             bottom: 20px;
+        }
+
+        .description {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            text-align: right;
         }
     </style>
 </head>
@@ -48,37 +55,40 @@
         <p>hallo@heenweer.com</p>
         <p>@heenweer</p>
     </div>
+    <div class="description" id="description"></div>
 
     <script>
-        function getRandomImage() {
-            let images = [
-                'images/image1.jpg', 
-                'images/image2.jpg', 
-                'images/image3.jpg' // Voeg meer toe
-            ];
-            return images[Math.floor(Math.random() * images.length)];
+        let images = [
+            { src: 'images/image1.jpg', desc: 'Omschrijving 1' },
+            { src: 'images/image2.jpg', desc: 'Omschrijving 2' },
+            { src: 'images/image3.jpg', desc: 'Omschrijving 3' }
+        ];
+        let currentIndex = Math.floor(Math.random() * images.length);
+
+        function updateBackground() {
+            document.body.style.backgroundImage = `url('${images[currentIndex].src}')`;
+            document.getElementById('description').textContent = images[currentIndex].desc;
         }
-        
-        function setBackgroundImage() {
-            let imageUrl = getRandomImage();
-            document.body.style.backgroundImage = `url('${imageUrl}')`;
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateBackground();
         }
-        
-        function checkMobile() {
-            if (window.innerWidth < 768) { // Mobiele breedte
-                let mobileImages = [
-                    'images/mobile1.jpg',
-                    'images/mobile2.jpg',
-                    'images/mobile3.jpg' // Alternatieve mobiele afbeeldingen
-                ];
-                document.body.style.backgroundImage = `url('${mobileImages[Math.floor(Math.random() * mobileImages.length)]}')`;
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateBackground();
+        }
+
+        document.body.addEventListener('click', function(event) {
+            if (event.clientX > window.innerWidth / 2) {
+                nextImage();
             } else {
-                setBackgroundImage();
+                prevImage();
             }
-        }
-        
-        window.onload = checkMobile;
-        window.onresize = checkMobile;
+        });
+
+        updateBackground();
     </script>
 </body>
 </html>
