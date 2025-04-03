@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allert's Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            color: black;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100px; /* Pas dit aan naar je gewenste formaat */
+        }
+
+        .info {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img src="logo.svg" alt="Logo" class="logo">
+    <div class="info">
+        <p>Allert Naam</p>
+        <p>allert@email.com</p>
+        <p>www.allertportfolio.com</p>
+    </div>
+
+    <script>
+        function getRandomImage() {
+            let images = [
+                'images/image1.jpg', 
+                'images/image2.jpg', 
+                'images/image3.jpg' // Voeg meer toe
+            ];
+            return images[Math.floor(Math.random() * images.length)];
+        }
+        
+        function setBackgroundImage() {
+            let imageUrl = getRandomImage();
+            document.body.style.backgroundImage = `url('${imageUrl}')`;
+        }
+        
+        function checkMobile() {
+            if (window.innerWidth < 768) { // Mobiele breedte
+                let mobileImages = [
+                    'images/mobile1.jpg',
+                    'images/mobile2.jpg',
+                    'images/mobile3.jpg' // Alternatieve mobiele afbeeldingen
+                ];
+                document.body.style.backgroundImage = `url('${mobileImages[Math.floor(Math.random() * mobileImages.length)]}')`;
+            } else {
+                setBackgroundImage();
+            }
+        }
+        
+        window.onload = checkMobile;
+        window.onresize = checkMobile;
+    </script>
+</body>
+</html>
