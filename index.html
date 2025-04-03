@@ -40,6 +40,15 @@
             bottom: 20px;
         }
 
+        .info a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
         .description {
             position: absolute;
             right: 20px;
@@ -52,21 +61,23 @@
     <img src="logo.svg" alt="Logo" class="logo">
     <div class="info">
         <p>Heen en Weer</p>
-        <p>hallo@heenweer.com</p>
-        <p>@heenweer</p>
+        <p><a href="mailto:hallo@heenweer.com">hallo@heenweer.com</a></p>
+        <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
     </div>
     <div class="description" id="description"></div>
 
     <script>
         let images = [
-            { src: 'images/image1.jpg', desc: 'Omschrijving 1' },
-            { src: 'images/image2.jpg', desc: 'Omschrijving 2' },
-            { src: 'images/image3.jpg', desc: 'Omschrijving 3' }
+            { src: 'images/image1.jpg', mobile: 'images/mobile1.jpg', desc: 'Omschrijving 1' },
+            { src: 'images/image2.jpg', mobile: 'images/mobile2.jpg', desc: 'Omschrijving 2' },
+            { src: 'images/image3.jpg', mobile: 'images/mobile3.jpg', desc: 'Omschrijving 3' }
         ];
         let currentIndex = Math.floor(Math.random() * images.length);
 
         function updateBackground() {
-            document.body.style.backgroundImage = `url('${images[currentIndex].src}')`;
+            let isMobile = window.innerWidth < 768;
+            let imageUrl = isMobile ? images[currentIndex].mobile : images[currentIndex].src;
+            document.body.style.backgroundImage = `url('${imageUrl}')`;
             document.getElementById('description').textContent = images[currentIndex].desc;
         }
 
@@ -88,6 +99,19 @@
             }
         });
 
+        document.body.addEventListener('mousemove', function(event) {
+            if (window.innerWidth >= 768) { // Alleen op desktop
+                if (event.clientX > window.innerWidth / 2) {
+                    document.body.style.cursor = 'url(cursor-right.svg), auto';
+                } else {
+                    document.body.style.cursor = 'url(cursor-left.svg), auto';
+                }
+            } else {
+                document.body.style.cursor = 'auto';
+            }
+        });
+
+        window.addEventListener('resize', updateBackground);
         updateBackground();
     </script>
 </body>
