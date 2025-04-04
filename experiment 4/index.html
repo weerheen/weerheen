@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heen en Weer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            color: black;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+        }
+
+        .info {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+        }
+
+        .info p {
+            margin-bottom: 8px; /* Dit zorgt voor witruimte tussen de regels */
+        }
+
+        .info a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
+        .description {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            text-align: right;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .description.active {
+            font-weight: bold;
+        }
+
+        .project-info {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            max-width: 33vw;
+            min-height: 60px;
+        }
+
+        .project-info .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black; /* Zwart maken van het klokje */
+        }
+
+        .project-info .close-btn:hover {
+            color: red;
+        }
+
+        @media (max-width: 768px) {
+            .project-info {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="logo.svg" alt="Logo" class="logo">
+    <div class="info">
+        <p>Heen en Weer</p>
+        <p><a href="mailto:hallo@heenweer.com">hallo@heenweer.com</a></p>
+        <p>leeuwarden</p> <!-- Toegevoegde regel met tekst "leeuwarden" -->
+        <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
+        <p id="time"></p> <!-- Tijdweergave -->
+    </div>
+    <div class="project-info" id="project-info">
+        <span class="close-btn" onclick="toggleFilter()">&times;</span>
+        <div id="project-text"></div>
+    </div>
+    <div class="description" id="description"></div>
+
+    <script>
+        let images = [
+            { src: 'images/image1.jpg', mobile: 'images/mobile1.jpg', desc: 'Project A', category: 'A', info: 'Dit is een kort stukje over Project A.' },
+            { src: 'images/image2.jpg', mobile: 'images/mobile2.jpg', desc: 'Project B', category: 'B', info: 'Dit is een kort stukje over Project B.' },
+            { src: 'images/image3.jpg', mobile: 'images/mobile3.jpg', desc: 'Project C', category: 'C', info: 'Dit is een kort stukje over Project C.' },
+            { src: 'images/image4.jpg', mobile: 'images/mobile4.jpg', desc: 'Project A', category: 'A', info: 'Dit is een ander stukje over Project A.' },
+            { src: 'images/image5.jpg', mobile: 'images/mobile5.jpg', desc: 'Project B', category: 'B', info: 'Nog een stukje over Project B.' }
+        ];
+        
+        let currentIndex = Math.floor(Math.random() * images.length);
+        let activeCategory = null;
+
+        function getFilteredImages() {
+            return activeCategory ? images.filter(img => img.category === activeCategory) : images;
+        }
+
+        function updateBackground() {
+            let filteredImages = getFilteredImages();
+            if (filteredImages.length === 0) return;
+
+            let isMobile = window.innerWidth < 768;
+            let imageUrl = isMobile ? filteredImages[currentIndex].mobile : filteredImages[currentIndex].src;
+            document.body.style.backgroundImage = `url('${imageUrl}')`;
+            document.getElementById('description').textContent = filteredImages[currentIndex].desc;
+            document.getElementById('project-text').textContent = filteredImages[currentIndex].info;
+        }
+
+        function nextImage() {
+            let filteredImages = getFilteredImages();
+            currentIndex = (currentIndex + 1) % filteredImages.length;
+            updateBackground();
+        }
+
+        function prevImage() {
+            let filteredImages = getFilteredImages();
+            currentIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+            updateBackground();
+        }
+
+        function toggleFilter() {
+            let descriptionElement = document.getElementById('description');
+            let projectInfoElement = document.getElementById('project-info');
+            if (!activeCategory) {
+                activeCategory = images[currentIndex].category;
+                descriptionElement.classList.add('active');
+                projectInfoElement.style.display = 'block';
+            } else {
+                activeCategory = null;
+                descriptionElement.classList.remove('active');
+                projectInfoElement.style.display = 'none';
+            }
+            currentIndex = 0;
+            updateBackground();
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateClock, 1000); // De klok elke seconde bijwerken
+
+        document.body.addEventListener('mousemove', function(event) {
+            if (event.clientX < window.innerWidth / 2) {
+                document.body.style.cursor = "url('cursor-left.png') 8 8, auto";
+            } else {
+                document.body.style.cursor = "url('cursor-right.png') 8 8, auto";
+            }
+        });
+
+        document.body.addEventListener('click', function(event) {
+            if (event.clientX > window.innerWidth / 2) {
+                nextImage();
+            } else {
+                prevImage();
+            }
+        });
+
+        document.getElementById('description').addEventListener('click', toggleFilter);
+
+        window.addEventListener('resize', updateBackground);
+        updateBackground();
+    </script>
+</body>
+</html>
