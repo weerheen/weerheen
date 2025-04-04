@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heen en Weerr</title>
+    <title>Heen en Weer</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
         
@@ -57,25 +57,6 @@
             cursor: pointer;
             text-decoration: underline;
         }
-
-        .cursor-left, .cursor-right {
-            position: fixed;
-            top: 50%;
-            width: 50px;
-            height: 50px;
-            transform: translateY(-50%);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .cursor-left {
-            left: 20px;
-        }
-
-        .cursor-right {
-            right: 20px;
-        }
     </style>
 </head>
 <body>
@@ -86,8 +67,6 @@
         <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
     </div>
     <div class="description" id="description"></div>
-    <img src="cursor-left.png" class="cursor-left" id="cursor-left">
-    <img src="cursor-right.png" class="cursor-right" id="cursor-right">
 
     <script>
         let images = [
@@ -128,15 +107,10 @@
         }
 
         document.body.addEventListener('mousemove', function(event) {
-            let leftCursor = document.getElementById('cursor-left');
-            let rightCursor = document.getElementById('cursor-right');
-            
             if (event.clientX < window.innerWidth / 2) {
-                leftCursor.style.opacity = 1;
-                rightCursor.style.opacity = 0;
+                document.body.style.cursor = "url('cursor-left.png'), auto";
             } else {
-                leftCursor.style.opacity = 0;
-                rightCursor.style.opacity = 1;
+                document.body.style.cursor = "url('cursor-right.png'), auto";
             }
         });
 
