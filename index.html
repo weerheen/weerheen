@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heen en Weer</title>
+    <title>Heen en Weerr</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
         
@@ -25,7 +25,6 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            cursor: none;
         }
 
         .logo {
@@ -55,39 +54,26 @@
             right: 20px;
             bottom: 20px;
             text-align: right;
+            cursor: pointer;
+            text-decoration: underline;
         }
 
-        .cursor-overlay {
+        .cursor-left, .cursor-right {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            mix-blend-mode: difference;
-        }
-
-        .cursor-overlay img {
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            transform: translate(-50%, -50%);
-        }
-
-        .arrow {
-            position: absolute;
             top: 50%;
-            transform: translateY(-50%);
             width: 50px;
             height: 50px;
-            opacity: 0.5;
+            transform: translateY(-50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .arrow-left {
+        .cursor-left {
             left: 20px;
         }
 
-        .arrow-right {
+        .cursor-right {
             right: 20px;
         }
     </style>
@@ -100,37 +86,59 @@
         <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
     </div>
     <div class="description" id="description"></div>
-    <img src="arrow-left.png" class="arrow arrow-left">
-    <img src="arrow-right.png" class="arrow arrow-right">
-    <div class="cursor-overlay" id="cursor-overlay">
-        <img src="cursor-left.png" id="cursor-left" style="display: none;">
-        <img src="cursor-right.png" id="cursor-right" style="display: none;">
-    </div>
+    <img src="cursor-left.png" class="cursor-left" id="cursor-left">
+    <img src="cursor-right.png" class="cursor-right" id="cursor-right">
 
     <script>
         let images = [
-            { src: 'images/image1.jpg', mobile: 'images/mobile1.jpg', desc: 'Omschrijving 1' },
-            { src: 'images/image2.jpg', mobile: 'images/mobile2.jpg', desc: 'Omschrijving 2' },
-            { src: 'images/image3.jpg', mobile: 'images/mobile3.jpg', desc: 'Omschrijving 3' }
+            { src: 'images/image1.jpg', mobile: 'images/mobile1.jpg', desc: 'Project A', category: 'A' },
+            { src: 'images/image2.jpg', mobile: 'images/mobile2.jpg', desc: 'Project B', category: 'B' },
+            { src: 'images/image3.jpg', mobile: 'images/mobile3.jpg', desc: 'Project C', category: 'C' },
+            { src: 'images/image4.jpg', mobile: 'images/mobile4.jpg', desc: 'Project A', category: 'A' },
+            { src: 'images/image5.jpg', mobile: 'images/mobile5.jpg', desc: 'Project B', category: 'B' }
         ];
+        
         let currentIndex = Math.floor(Math.random() * images.length);
+        let activeCategory = null;
+
+        function getFilteredImages() {
+            return activeCategory ? images.filter(img => img.category === activeCategory) : images;
+        }
 
         function updateBackground() {
+            let filteredImages = getFilteredImages();
+            if (filteredImages.length === 0) return;
+
             let isMobile = window.innerWidth < 768;
-            let imageUrl = isMobile ? images[currentIndex].mobile : images[currentIndex].src;
+            let imageUrl = isMobile ? filteredImages[currentIndex].mobile : filteredImages[currentIndex].src;
             document.body.style.backgroundImage = `url('${imageUrl}')`;
-            document.getElementById('description').textContent = images[currentIndex].desc;
+            document.getElementById('description').textContent = filteredImages[currentIndex].desc;
         }
 
         function nextImage() {
-            currentIndex = (currentIndex + 1) % images.length;
+            let filteredImages = getFilteredImages();
+            currentIndex = (currentIndex + 1) % filteredImages.length;
             updateBackground();
         }
 
         function prevImage() {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            let filteredImages = getFilteredImages();
+            currentIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
             updateBackground();
         }
+
+        document.body.addEventListener('mousemove', function(event) {
+            let leftCursor = document.getElementById('cursor-left');
+            let rightCursor = document.getElementById('cursor-right');
+            
+            if (event.clientX < window.innerWidth / 2) {
+                leftCursor.style.opacity = 1;
+                rightCursor.style.opacity = 0;
+            } else {
+                leftCursor.style.opacity = 0;
+                rightCursor.style.opacity = 1;
+            }
+        });
 
         document.body.addEventListener('click', function(event) {
             if (event.clientX > window.innerWidth / 2) {
@@ -140,34 +148,15 @@
             }
         });
 
-        document.body.addEventListener('mousemove', function(event) {
-            let cursorLeft = document.getElementById('cursor-left');
-            let cursorRight = document.getElementById('cursor-right');
-            let arrowLeft = document.querySelector('.arrow-left');
-            let arrowRight = document.querySelector('.arrow-right');
-
-            if (window.innerWidth >= 768) { // Alleen op desktop
-                if (event.clientX > window.innerWidth / 2) {
-                    cursorRight.style.display = 'block';
-                    cursorLeft.style.display = 'none';
-                    cursorRight.style.left = `${event.clientX}px`;
-                    cursorRight.style.top = `${event.clientY}px`;
-                    arrowRight.style.opacity = '1';
-                    arrowLeft.style.opacity = '0.5';
-                } else {
-                    cursorLeft.style.display = 'block';
-                    cursorRight.style.display = 'none';
-                    cursorLeft.style.left = `${event.clientX}px`;
-                    cursorLeft.style.top = `${event.clientY}px`;
-                    arrowLeft.style.opacity = '1';
-                    arrowRight.style.opacity = '0.5';
-                }
+        document.getElementById('description').addEventListener('click', function() {
+            let filteredImages = getFilteredImages();
+            if (!activeCategory) {
+                activeCategory = filteredImages[currentIndex].category;
             } else {
-                cursorLeft.style.display = 'none';
-                cursorRight.style.display = 'none';
-                arrowLeft.style.opacity = '0.5';
-                arrowRight.style.opacity = '0.5';
+                activeCategory = null;
             }
+            currentIndex = 0;
+            updateBackground();
         });
 
         window.addEventListener('resize', updateBackground);
