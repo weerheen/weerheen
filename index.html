@@ -40,6 +40,10 @@
             bottom: 20px;
         }
 
+        .info p {
+            margin-bottom: 8px; /* Dit zorgt voor witruimte tussen de regels */
+        }
+
         .info a {
             color: black;
             text-decoration: none;
@@ -86,18 +90,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: black; /* Zwart maken van het klokje */
         }
 
         .project-info .close-btn:hover {
             color: red;
-        }
-
-        .time {
-            position: absolute;
-            left: 20px;
-            bottom: 10px;
-            font-size: 14px;
-            color: white;
         }
 
         @media (max-width: 768px) {
@@ -112,16 +109,15 @@
     <div class="info">
         <p>Heen en Weer</p>
         <p><a href="mailto:hallo@heenweer.com">hallo@heenweer.com</a></p>
+        <p>leeuwarden</p> <!-- Toegevoegde regel met tekst "leeuwarden" -->
         <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
+        <p id="time"></p> <!-- Tijdweergave -->
     </div>
     <div class="project-info" id="project-info">
         <span class="close-btn" onclick="toggleFilter()">&times;</span>
         <div id="project-text"></div>
     </div>
     <div class="description" id="description"></div>
-
-    <!-- Tijd weergeven onderaan links -->
-    <div class="time" id="current-time"></div>
 
     <script>
         let images = [
@@ -178,6 +174,16 @@
             updateBackground();
         }
 
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateClock, 1000); // De klok elke seconde bijwerken
+
         document.body.addEventListener('mousemove', function(event) {
             if (event.clientX < window.innerWidth / 2) {
                 document.body.style.cursor = "url('cursor-left.png') 8 8, auto";
@@ -198,25 +204,6 @@
 
         window.addEventListener('resize', updateBackground);
         updateBackground();
-
-        // Tijd functie
-        function updateTime() {
-            const options = { 
-                timeZone: "Europe/Amsterdam", // Leeuwarden is in de tijdzone van Amsterdam
-                hour12: false, 
-                hour: "2-digit", 
-                minute: "2-digit", 
-                second: "2-digit"
-            };
-            const now = new Date().toLocaleTimeString('nl-NL', options);
-            document.getElementById("current-time").textContent = now;
-        }
-
-        // Update de tijd elke seconde
-        setInterval(updateTime, 1000);
-
-        // Initial call to display time immediately on load
-        updateTime();
     </script>
 </body>
 </html>
