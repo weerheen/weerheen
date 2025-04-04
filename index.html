@@ -25,7 +25,8 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            transition: background 1s ease;
+            padding-left: 40px;
+            padding-right: 20px;
         }
 
         .logo {
@@ -37,13 +38,14 @@
 
         .info {
             position: absolute;
-            left: 20px;
+            left: 40px;
             bottom: 20px;
-            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
         .info p {
-            margin: 5px 0;
+            margin-bottom: 5px;
+            line-height: 1.3;
         }
 
         .info a {
@@ -58,12 +60,10 @@
         .description {
             position: absolute;
             right: 20px;
-            bottom: 60px;
-            font-size: 1.5rem;
+            bottom: 20px;
             text-align: right;
             cursor: pointer;
             text-decoration: underline;
-            z-index: 10;
         }
 
         .description.active {
@@ -73,14 +73,17 @@
         .project-info {
             position: absolute;
             right: 20px;
-            bottom: 100px;
+            bottom: 20px;
             text-align: right;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1.5;
             max-width: 33vw;
             min-height: 60px;
+            display: none;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
         }
 
         .project-info .close-btn {
@@ -95,10 +98,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: black;
         }
 
         .project-info .close-btn:hover {
             color: red;
+        }
+
+        /* Voor desktop */
+        @media (min-width: 768px) {
+            body {
+                font-size: 2rem;
+            }
+
+            .info p {
+                margin-bottom: 10px;
+                line-height: 1.4;
+            }
         }
 
         @media (max-width: 768px) {
@@ -107,70 +123,42 @@
             }
         }
 
-        .filter-button {
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-block;
-            text-transform: capitalize;
-            padding: 5px 10px;
-            border-radius: 20px;
-            background-color: white;
-            color: black;
-            margin-top: 5px;
-            transition: 0.3s;
-        }
-
-        .filter-button.active {
-            color: white;
-            background-color: black;
-            font-weight: bold;
-        }
-
-        .time-container {
+        .project-button {
             position: absolute;
-            left: 20px;
-            bottom: 10px;
-            font-size: 2rem;
-            color: white;
+            right: 20px;
+            bottom: 20px;
+            font-weight: normal;
+            cursor: pointer;
+            text-decoration: underline;
+            z-index: 2;
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
 
-        .time-container span {
-            margin-bottom: 5px;
-        }
-
-        .time-container .time {
-            font-size: 1.5rem;
-        }
-
-        .active-filter {
+        .project-button.active {
             font-weight: bold;
             color: white;
-            background-color: black;
-            border-radius: 5px;
-            padding: 10px;
-            margin-top: 10px;
         }
 
-        .active-filter span {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .active-filter span:after {
-            content: " x";
-        }
-
-        .filter-button-box {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-        }
-
-        .filter-button-box .active-filter {
+        .project-button .rectangle {
+            width: 160px;
+            height: 40px;
+            background-color: transparent;
+            border: 2px solid black;
+            border-radius: 20px;
             margin-top: 5px;
+            position: absolute;
+            bottom: -10px;  /* Rechthoek iets onder de tekst */
+            z-index: -1;
+        }
+
+        .project-button.active .rectangle {
+            background-color: black;
+        }
+
+        .project-button span {
+            z-index: 1;  /* Zorgt ervoor dat de tekst boven de rechthoek staat */
         }
     </style>
 </head>
@@ -179,25 +167,17 @@
     <div class="info">
         <p>Heen en Weer</p>
         <p><a href="mailto:hallo@heenweer.com">hallo@heenweer.com</a></p>
+        <p><a href="https://www.google.com/maps/dir/?api=1&destination=Leeuwarden" target="_blank">leeuwarden</a></p>
         <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
-        <p><a href="https://www.google.com/maps/dir/?api=1&destination=Leeuwarden" target="_blank">Leeuwarden</a></p>
+        <p id="time"></p>
     </div>
-
-    <div class="description" id="description">Klik om projectinformatie te tonen</div>
-
-    <div class="time-container">
-        <span>Heden</span>
-        <span id="current-time" class="time">00:00:00</span>
-    </div>
-
     <div class="project-info" id="project-info">
         <span class="close-btn" onclick="toggleFilter()">&times;</span>
         <div id="project-text"></div>
     </div>
-
-    <div class="filter-button-box">
-        <div class="filter-button" id="filter-button" onclick="toggleFilter()">Project B</div>
-        <div class="active-filter" id="active-filter"></div>
+    <div class="project-button" id="project-button" onclick="toggleFilter()">
+        <span id="project-title">Project B</span>
+        <div class="rectangle"></div>
     </div>
 
     <script>
@@ -211,7 +191,6 @@
         
         let currentIndex = Math.floor(Math.random() * images.length);
         let activeCategory = null;
-        let isFilterActive = false;
 
         function getFilteredImages() {
             return activeCategory ? images.filter(img => img.category === activeCategory) : images;
@@ -224,51 +203,40 @@
             let isMobile = window.innerWidth < 768;
             let imageUrl = isMobile ? filteredImages[currentIndex].mobile : filteredImages[currentIndex].src;
             document.body.style.backgroundImage = `url('${imageUrl}')`;
-            document.getElementById('description').textContent = filteredImages[currentIndex].desc;
             document.getElementById('project-text').textContent = filteredImages[currentIndex].info;
-        }
-
-        function nextImage() {
-            let filteredImages = getFilteredImages();
-            currentIndex = (currentIndex + 1) % filteredImages.length;
-            updateBackground();
-        }
-
-        function prevImage() {
-            let filteredImages = getFilteredImages();
-            currentIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
-            updateBackground();
         }
 
         function toggleFilter() {
             let descriptionElement = document.getElementById('description');
             let projectInfoElement = document.getElementById('project-info');
-            let filterButton = document.getElementById('filter-button');
-            let activeFilter = document.getElementById('active-filter');
+            let projectButton = document.getElementById('project-button');
+            let projectTitle = document.getElementById('project-title');
 
-            if (!isFilterActive) {
-                isFilterActive = true;
+            if (!activeCategory) {
                 activeCategory = images[currentIndex].category;
-                descriptionElement.classList.add('active');
-                projectInfoElement.style.display = 'block';
-                filterButton.classList.add('active');
-                filterButton.textContent = `${images[currentIndex].desc} x`;
-
-                activeFilter.textContent = `${images[currentIndex].desc}`;
+                projectButton.classList.add('active');
+                projectTitle.textContent = `${projectTitle.textContent} x`;
+                projectInfoElement.style.display = 'none'; // Geen omschrijving meer tonen
             } else {
-                isFilterActive = false;
                 activeCategory = null;
-                descriptionElement.classList.remove('active');
+                projectButton.classList.remove('active');
+                projectTitle.textContent = projectTitle.textContent.replace(' x', '');
                 projectInfoElement.style.display = 'none';
-                filterButton.classList.remove('active');
-                filterButton.textContent = images[currentIndex].desc;
-
-                activeFilter.textContent = '';
             }
 
             currentIndex = 0;
             updateBackground();
         }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateClock, 1000); // De klok elke seconde bijwerken
 
         document.body.addEventListener('mousemove', function(event) {
             if (event.clientX < window.innerWidth / 2) {
@@ -290,6 +258,6 @@
 
         window.addEventListener('resize', updateBackground);
         updateBackground();
-
-        // Update time every second
-        setInterval(function() {
+    </script>
+</body>
+</html>
