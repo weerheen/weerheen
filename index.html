@@ -65,20 +65,31 @@
         .project-info {
             position: absolute;
             right: 20px;
-            bottom: 60px;
+            bottom: 20px;
             background: rgba(255, 255, 255, 0.8);
             padding: 10px;
             border-radius: 5px;
             display: none;
             max-width: 33vw;
+            min-height: 60px;
         }
 
         .project-info .close-btn {
             position: absolute;
             top: 5px;
             right: 5px;
+            width: 16px;
+            height: 16px;
             cursor: pointer;
+            font-size: 16px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-info .close-btn:hover {
+            color: red;
         }
 
         @media (max-width: 768px) {
@@ -158,9 +169,9 @@
 
         document.body.addEventListener('mousemove', function(event) {
             if (event.clientX < window.innerWidth / 2) {
-                document.body.style.cursor = "url('cursor-left.png'), auto";
+                document.body.style.cursor = "url('cursor-left.png') 8 8, auto";
             } else {
-                document.body.style.cursor = "url('cursor-right.png'), auto";
+                document.body.style.cursor = "url('cursor-right.png') 8 8, auto";
             }
         });
 
