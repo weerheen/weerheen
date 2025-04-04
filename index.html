@@ -70,6 +70,21 @@
             padding: 10px;
             border-radius: 5px;
             display: none;
+            max-width: 33vw;
+        }
+
+        .project-info .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .project-info {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -80,13 +95,16 @@
         <p><a href="mailto:hallo@heenweer.com">hallo@heenweer.com</a></p>
         <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
     </div>
-    <div class="project-info" id="project-info"></div>
+    <div class="project-info" id="project-info">
+        <span class="close-btn" onclick="toggleFilter()">&times;</span>
+        <div id="project-text"></div>
+    </div>
     <div class="description" id="description"></div>
 
     <script>
         let images = [
             { src: 'images/image1.jpg', mobile: 'images/mobile1.jpg', desc: 'Project A', category: 'A', info: 'Dit is een kort stukje over Project A.' },
-            { src: 'images/image2.jpg', mobile: 'images/mobile2.jpg', desc: 'Project B', category: 'B', info: 'Dit is een kort stukje over Project B. en ik maak hem nu langer als het goed is om te kijken wat er gebeurt boeie chill is het al lang genoeg michelle eet een broodje of iets anders idk ff kijken.' },
+            { src: 'images/image2.jpg', mobile: 'images/mobile2.jpg', desc: 'Project B', category: 'B', info: 'Dit is een kort stukje over Project B.' },
             { src: 'images/image3.jpg', mobile: 'images/mobile3.jpg', desc: 'Project C', category: 'C', info: 'Dit is een kort stukje over Project C.' },
             { src: 'images/image4.jpg', mobile: 'images/mobile4.jpg', desc: 'Project A', category: 'A', info: 'Dit is een ander stukje over Project A.' },
             { src: 'images/image5.jpg', mobile: 'images/mobile5.jpg', desc: 'Project B', category: 'B', info: 'Nog een stukje over Project B.' }
@@ -107,7 +125,7 @@
             let imageUrl = isMobile ? filteredImages[currentIndex].mobile : filteredImages[currentIndex].src;
             document.body.style.backgroundImage = `url('${imageUrl}')`;
             document.getElementById('description').textContent = filteredImages[currentIndex].desc;
-            document.getElementById('project-info').textContent = filteredImages[currentIndex].info;
+            document.getElementById('project-text').textContent = filteredImages[currentIndex].info;
         }
 
         function nextImage() {
@@ -119,6 +137,22 @@
         function prevImage() {
             let filteredImages = getFilteredImages();
             currentIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+            updateBackground();
+        }
+
+        function toggleFilter() {
+            let descriptionElement = document.getElementById('description');
+            let projectInfoElement = document.getElementById('project-info');
+            if (!activeCategory) {
+                activeCategory = images[currentIndex].category;
+                descriptionElement.classList.add('active');
+                projectInfoElement.style.display = 'block';
+            } else {
+                activeCategory = null;
+                descriptionElement.classList.remove('active');
+                projectInfoElement.style.display = 'none';
+            }
+            currentIndex = 0;
             updateBackground();
         }
 
@@ -138,21 +172,7 @@
             }
         });
 
-        document.getElementById('description').addEventListener('click', function() {
-            let descriptionElement = document.getElementById('description');
-            let projectInfoElement = document.getElementById('project-info');
-            if (!activeCategory) {
-                activeCategory = images[currentIndex].category;
-                descriptionElement.classList.add('active');
-                projectInfoElement.style.display = 'block';
-            } else {
-                activeCategory = null;
-                descriptionElement.classList.remove('active');
-                projectInfoElement.style.display = 'none';
-            }
-            currentIndex = 0;
-            updateBackground();
-        });
+        document.getElementById('description').addEventListener('click', toggleFilter);
 
         window.addEventListener('resize', updateBackground);
         updateBackground();
