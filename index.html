@@ -25,6 +25,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            transition: background 1s ease;
         }
 
         .logo {
@@ -38,6 +39,11 @@
             position: absolute;
             left: 20px;
             bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .info p {
+            margin: 5px 0;
         }
 
         .info a {
@@ -52,10 +58,12 @@
         .description {
             position: absolute;
             right: 20px;
-            bottom: 20px;
+            bottom: 60px;
+            font-size: 1.5rem;
             text-align: right;
             cursor: pointer;
             text-decoration: underline;
+            z-index: 10;
         }
 
         .description.active {
@@ -65,7 +73,8 @@
         .project-info {
             position: absolute;
             right: 20px;
-            bottom: 20px;
+            bottom: 100px;
+            text-align: right;
             background: rgba(255, 255, 255, 0.8);
             padding: 10px;
             border-radius: 5px;
@@ -108,6 +117,7 @@
             background-color: white;
             color: black;
             margin-top: 5px;
+            transition: 0.3s;
         }
 
         .filter-button.active {
@@ -140,8 +150,9 @@
             background-color: black;
             border-radius: 5px;
             padding: 10px;
+            margin-top: 10px;
         }
-        
+
         .active-filter span {
             font-weight: bold;
             margin-right: 10px;
@@ -150,13 +161,14 @@
         .active-filter span:after {
             content: " x";
         }
-        
+
         .filter-button-box {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-end;
             gap: 8px;
         }
-        
+
         .filter-button-box .active-filter {
             margin-top: 5px;
         }
@@ -171,7 +183,7 @@
         <p><a href="https://www.google.com/maps/dir/?api=1&destination=Leeuwarden" target="_blank">Leeuwarden</a></p>
     </div>
 
-    <div class="description" id="description"></div>
+    <div class="description" id="description">Klik om projectinformatie te tonen</div>
 
     <div class="time-container">
         <span>Heden</span>
@@ -281,9 +293,3 @@
 
         // Update time every second
         setInterval(function() {
-            let currentTime = new Date().toLocaleTimeString('nl-NL', { hour12: false });
-            document.getElementById('current-time').textContent = currentTime;
-        }, 1000);
-    </script>
-</body>
-</html>
