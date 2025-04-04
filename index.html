@@ -92,6 +92,14 @@
             color: red;
         }
 
+        .time {
+            position: absolute;
+            left: 20px;
+            bottom: 10px;
+            font-size: 14px;
+            color: white;
+        }
+
         @media (max-width: 768px) {
             .project-info {
                 display: none !important;
@@ -111,6 +119,9 @@
         <div id="project-text"></div>
     </div>
     <div class="description" id="description"></div>
+
+    <!-- Tijd weergeven onderaan links -->
+    <div class="time" id="current-time"></div>
 
     <script>
         let images = [
@@ -187,6 +198,25 @@
 
         window.addEventListener('resize', updateBackground);
         updateBackground();
+
+        // Tijd functie
+        function updateTime() {
+            const options = { 
+                timeZone: "Europe/Amsterdam", // Leeuwarden is in de tijdzone van Amsterdam
+                hour12: false, 
+                hour: "2-digit", 
+                minute: "2-digit", 
+                second: "2-digit"
+            };
+            const now = new Date().toLocaleTimeString('nl-NL', options);
+            document.getElementById("current-time").textContent = now;
+        }
+
+        // Update de tijd elke seconde
+        setInterval(updateTime, 1000);
+
+        // Initial call to display time immediately on load
+        updateTime();
     </script>
 </body>
 </html>
