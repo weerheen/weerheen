@@ -41,7 +41,8 @@
         }
 
         .info p {
-            margin-bottom: 8px; /* Dit zorgt voor witruimte tussen de regels */
+            margin-bottom: 5px; /* Vermindert de witruimte tussen regels */
+            line-height: 1.3; /* Vermindert de regelafstand */
         }
 
         .info a {
@@ -97,6 +98,18 @@
             color: red;
         }
 
+        /* Voor desktop: */
+        @media (min-width: 768px) {
+            body {
+                font-size: 1.2rem; /* Vergroot de tekstgrootte voor desktop */
+            }
+
+            .info p {
+                margin-bottom: 10px; /* Een beetje meer ruimte tussen de regels */
+                line-height: 1.4; /* Regelafstand aanpassen */
+            }
+        }
+
         @media (max-width: 768px) {
             .project-info {
                 display: none !important;
@@ -109,8 +122,8 @@
     <div class="info">
         <p>Heen en Weer</p>
         <p><a href="mailto:hallo@heenweer.com">hallo@heenweer.com</a></p>
-        <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
         <p>leeuwarden</p> <!-- Toegevoegde regel met tekst "leeuwarden" -->
+        <p><a href="https://instagram.com/heenweer" target="_blank">@heenweer</a></p>
         <p id="time"></p> <!-- Tijdweergave -->
     </div>
     <div class="project-info" id="project-info">
