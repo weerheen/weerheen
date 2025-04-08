@@ -77,7 +77,6 @@
       background-color: transparent;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 2rem;
     }
 
     .category.active {
@@ -103,6 +102,12 @@
     body.desktop.right-cursor {
       cursor: url('cursor-right.png'), auto;
     }
+    
+    @media (min-width: 769px) {
+  .category {
+    font-size: 2rem;
+  }
+}
   </style>
 </head>
 <body>
