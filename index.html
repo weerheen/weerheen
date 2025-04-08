@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-  <!-- Basisinstellingen -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fullscreen Foto Website</title>
+  <title>Fullscreen Site</title>
 
-  <!-- Lexend font -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
 
+  <!-- Basis CSS -->
   <style>
-    /* Algemene reset en instellingen */
+    /* Algemene instellingen */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      user-select: none;
     }
 
     html, body {
@@ -23,207 +22,205 @@
       height: 100%;
       overflow: hidden;
       font-family: 'Lexend', sans-serif;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-
-    /* Tekststijlen */
-    .info {
-      position: absolute;
-      left: 20px;
-      bottom: 20px;
-      font-size: 2rem;
       color: black;
     }
 
+    /* Achtergrondfoto */
+    body {
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease;
+    }
+
+    /* Logo SVG's */
+    .logo {
+      position: absolute;
+      top: 20px;
+      width: 40px;
+    }
+
+    .logo.left { left: 20px; }
+    .logo.center { left: 50%; transform: translateX(-50%); }
+    .logo.right { right: 20px; }
+
+    /* Tekst linksonder */
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 2rem;
+      line-height: 1.4;
+    }
+
+    /* Responsieve tekst */
     @media (max-width: 768px) {
       .info {
         font-size: 1.4rem;
       }
     }
 
-    /* Tijd realtime */
+    /* Tijd apart voor realtime update */
     .time {
-      margin-top: 0.3em;
+      display: block;
     }
 
-    /* Categorie knop rechts onder */
-    .category-btn {
+    /* Categorie rechts onder */
+    .category {
       position: absolute;
-      right: 20px;
       bottom: 20px;
-      border: 2px solid black;
-      border-radius: 16px;
-      padding: 8px 16px;
-      background-color: transparent;
-      color: black;
+      right: 20px;
+      border: 1px solid black;
+      padding: 0.4em 0.8em;
+      border-radius: 999px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      background-color: transparent;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 2rem;
     }
 
-    .category-btn.active {
+    .category.active {
       background-color: black;
       color: white;
     }
 
-    .category-btn .close {
-      font-size: 1em;
-      cursor: pointer;
+    .category .close {
+      margin-left: 0.6em;
+      font-weight: bold;
+      display: none;
     }
 
-    @media (max-width: 768px) {
-      .category-btn {
-        font-size: 1.4rem;
-      }
+    .category.active .close {
+      display: inline;
     }
 
-    /* Logo SVG's */
-    .logo-left, .logo-center, .logo-right {
-      position: absolute;
-      top: 20px;
+    /* Aangepaste cursors */
+    body.desktop.left-cursor {
+      cursor: url('cursor-left.png'), auto;
     }
 
-    .logo-left {
-      left: 20px;
-    }
-
-    .logo-center {
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .logo-right {
-      right: 20px;
+    body.desktop.right-cursor {
+      cursor: url('cursor-right.png'), auto;
     }
   </style>
 </head>
 <body>
+  <!-- Logo SVG's -->
+  <img src="logo-left.svg" class="logo left" alt="logo links">
+  <img src="logo-center.svg" class="logo center" alt="logo midden">
+  <img src="logo-right.svg" class="logo right" alt="logo rechts">
 
-  <!-- SVG logo's bovenaan -->
-  <img class="logo-left" src="logo-left.svg" alt="logo left">
-  <img class="logo-center" src="logo-center.svg" alt="logo center">
-  <img class="logo-right" src="logo-right.svg" alt="logo right">
-
-  <!-- Linksonder info -->
-  <div class="info" id="info">
-    <div>Allert van Hoorn</div>
+  <!-- Linksonder tekst -->
+  <div class="info">
+    <div>Allert</div>
     <div>mail@example.com</div>
     <div>@gebruikersnaam</div>
     <div>Amsterdam</div>
-    <div class="time" id="time"></div>
+    <div class="time">00:00:00</div>
   </div>
 
-  <!-- Rechtsonder categorie knop -->
-  <div class="category-btn" id="categoryBtn">
-    <span id="categoryLabel"></span>
+  <!-- Rechts onder categorie -->
+  <div class="category" onclick="toggleCategoryFilter()">
+    <span id="categoryText">Categorie</span>
     <span class="close">×</span>
   </div>
 
   <script>
-    // -----------------------------
-    // FOTO-INSTELLINGEN
-    // -----------------------------
-    // Object met foto's, categorieën en of ze alleen bij filter getoond mogen worden
+    // Data voor foto's en categorieën
     const photos = [
-      { name: 'foto1', category: 'natuur', filterOnly: false },
-      { name: 'foto2', category: 'stad', filterOnly: false },
-      { name: 'foto3', category: 'natuur', filterOnly: true },
-      { name: 'foto4', category: 'architectuur', filterOnly: false },
-      { name: 'foto5', category: 'stad', filterOnly: true },
+      { name: 'photo1', category: 'landschap', filterOnly: false },
+      { name: 'photo2', category: 'portret', filterOnly: false },
+      { name: 'photo3', category: 'architectuur', filterOnly: true },
+      // voeg hier meer foto's toe
     ];
 
     let currentIndex = -1;
     let currentCategory = null;
-    let lastIndex = -1;
+    let lastLoaded = null;
 
-    // Detecteer mobiel
+    // Detecteer of mobiel of desktop
     const isMobile = window.innerWidth < 768;
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
 
-    // Tijd weergeven
-    function updateTime() {
+    // Toon real-time tijd
+    setInterval(() => {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('nl-NL', { hour12: false });
-      document.getElementById('time').textContent = timeStr;
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
+      document.querySelector('.time').textContent = timeStr;
+    }, 1000);
 
-    // Achtergrondfoto instellen
-    function setBackground(index) {
+    // Laad een specifieke foto
+    function loadPhoto(index) {
       const photo = photos[index];
-      const suffix = isMobile ? '-mobiel.jpg' : '-desktop.jpg';
-      document.body.style.backgroundImage = `url(images/${photo.name}${suffix})`;
-      document.getElementById('categoryLabel').textContent = photo.category;
+      if (!photo) return;
+      const path = `images/${photo.name}-${isMobile ? 'portrait' : 'landscape'}.jpg`;
+      document.body.style.backgroundImage = `url('${path}')`;
+      document.getElementById('categoryText').textContent = photo.category;
       currentIndex = index;
+      lastLoaded = photo.name;
     }
 
-    function getFilteredPhotos() {
-      return photos.filter(p => {
-        if (currentCategory) return p.category === currentCategory;
-        return !p.filterOnly;
-      });
+    // Laad een willekeurige foto
+    function loadRandomPhoto() {
+      let options = photos.filter(p => (!currentCategory || p.category === currentCategory) && (!currentCategory || !p.filterOnly || currentCategory));
+      if (lastLoaded && options.length > 1) {
+        options = options.filter(p => p.name !== lastLoaded);
+      }
+      const random = options[Math.floor(Math.random() * options.length)];
+      const newIndex = photos.findIndex(p => p.name === random.name);
+      loadPhoto(newIndex);
     }
 
-    // Willekeurige foto kiezen
-    function setRandomPhoto() {
-      const pool = getFilteredPhotos();
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * pool.length);
-      } while (pool.length > 1 && pool[newIndex] === photos[lastIndex]);
-      lastIndex = photos.indexOf(pool[newIndex]);
-      setBackground(lastIndex);
+    // Volgende/vorige
+    function nextPhoto() {
+      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const cur = photos[currentIndex];
+      const idx = options.findIndex(p => p.name === cur.name);
+      const next = (idx + 1) % options.length;
+      const newIndex = photos.findIndex(p => p.name === options[next].name);
+      loadPhoto(newIndex);
     }
 
-    // Vorige / Volgende foto
-    function navigatePhoto(direction) {
-      const pool = getFilteredPhotos();
-      const currentPhoto = photos[currentIndex];
-      const poolIndex = pool.indexOf(currentPhoto);
-      let newIndex = (poolIndex + direction + pool.length) % pool.length;
-      lastIndex = photos.indexOf(pool[newIndex]);
-      setBackground(lastIndex);
+    function prevPhoto() {
+      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const cur = photos[currentIndex];
+      const idx = options.findIndex(p => p.name === cur.name);
+      const prev = (idx - 1 + options.length) % options.length;
+      const newIndex = photos.findIndex(p => p.name === options[prev].name);
+      loadPhoto(newIndex);
     }
 
-    // Bij het laden, start met een willekeurige foto
-    setRandomPhoto();
-
-    // Categorie filter knop
-    const btn = document.getElementById('categoryBtn');
-    btn.addEventListener('click', () => {
-      if (currentCategory === photos[currentIndex].category) {
-        // Filter uit
+    // Filter toggle
+    function toggleCategoryFilter() {
+      const el = document.querySelector('.category');
+      const current = photos[currentIndex]?.category;
+      if (currentCategory === current) {
         currentCategory = null;
-        btn.classList.remove('active');
+        el.classList.remove('active');
       } else {
-        // Filter aan
-        currentCategory = photos[currentIndex].category;
-        btn.classList.add('active');
+        currentCategory = current;
+        el.classList.add('active');
       }
-      setRandomPhoto();
+      loadRandomPhoto();
+    }
+
+    // Cursor en klik-gebieden
+    document.addEventListener('mousemove', (e) => {
+      if (!document.body.classList.contains('desktop')) return;
+      const isLeft = e.clientX < window.innerWidth / 2;
+      document.body.classList.toggle('left-cursor', isLeft);
+      document.body.classList.toggle('right-cursor', !isLeft);
     });
 
-    // Cursor veranderen en klikacties
-    document.addEventListener('mousemove', e => {
-      if (isMobile) return;
-      const cursor = e.clientX > window.innerWidth / 2 ? 'url(images/cursor-right.png), auto' : 'url(images/cursor-left.png), auto';
-      document.body.style.cursor = cursor;
+    document.addEventListener('click', (e) => {
+      const isLeft = e.clientX < window.innerWidth / 2;
+      isLeft ? prevPhoto() : nextPhoto();
     });
 
-    document.addEventListener('click', e => {
-      if (isMobile) return;
-      if (e.clientX > window.innerWidth / 2) {
-        navigatePhoto(1);
-      } else {
-        navigatePhoto(-1);
-      }
-    });
+    // Eerste foto laden
+    window.onload = () => {
+      loadRandomPhoto();
+    };
   </script>
-
 </body>
 </html>
