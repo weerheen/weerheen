@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heen en Weer</title>
@@ -114,5 +115,236 @@
         window.addEventListener('resize', updateBackground);
         updateBackground();
     </script>
+=======
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fullscreen Site</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Basis CSS -->
+  <style>
+    /* Algemene instellingen */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Lexend', sans-serif;
+      color: black;
+    }
+
+    /* Achtergrondfoto */
+    body {
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.5s ease;
+    }
+
+    /* Logo SVG's */
+    .logo {
+      position: absolute;
+      top: 20px;
+      width: 40px;
+    }
+
+    .logo.left { left: 20px; }
+    .logo.center { left: 50%; transform: translateX(-50%); }
+    .logo.right { right: 20px; }
+
+    /* Tekst linksonder */
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 2rem;
+      line-height: 1.4;
+    }
+
+    /* Responsieve tekst */
+    @media (max-width: 768px) {
+  .info,
+  .info > div,
+  .info a,
+  .category {
+    font-size: 1.2rem;
+  }
+}
+
+    /* Tijd apart voor realtime update */
+    .time {
+      display: block;
+    }
+
+    /* Categorie rechts onder */
+    .category {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      border: 1px solid black;
+      padding: 0.4em 0.8em;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category.active {
+      background-color: black;
+      color: white;
+    }
+
+    .category .close {
+      margin-left: 0.6em;
+      font-weight: bold;
+      display: none;
+    }
+
+    .category.active .close {
+      display: inline;
+    }
+
+    /* Aangepaste cursors */
+    body.desktop.left-cursor {
+      cursor: url('cursor-left.png'), auto;
+    }
+
+    body.desktop.right-cursor {
+      cursor: url('cursor-right.png'), auto;
+    }
+    
+    @media (min-width: 769px) {
+  .category {
+    font-size: 2rem;
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- Logo SVG's -->
+  <img src="logo-left.svg" class="logo left" alt="logo links">
+  <img src="logo-right.svg" class="logo right" alt="logo rechts">
+
+  <!-- Linksonder tekst -->
+  <div class="info">
+    <div>Allert</div>
+    <div>mail@example.com</div>
+    <div>@gebruikersnaam</div>
+    <div>Amsterdam</div>
+    <div class="time">00:00:00</div>
+  </div>
+
+  <!-- Rechts onder categorie -->
+  <div class="category" onclick="toggleCategoryFilter()">
+    <span id="categoryText">Categorie</span>
+    <span class="close">×</span>
+  </div>
+
+  <script>
+    // Data voor foto's en categorieën
+    const photos = [
+      { name: 'photo1', category: 'landschap', filterOnly: false },
+      { name: 'photo2', category: 'portret', filterOnly: false },
+      { name: 'photo3', category: 'architectuur', filterOnly: true },
+      // voeg hier meer foto's toe
+    ];
+
+    let currentIndex = -1;
+    let currentCategory = null;
+    let lastLoaded = null;
+
+    // Detecteer of mobiel of desktop
+    const isMobile = window.innerWidth < 768;
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
+
+    // Toon real-time tijd
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('nl-NL', { hour12: false });
+      document.querySelector('.time').textContent = timeStr;
+    }, 1000);
+
+    // Laad een specifieke foto
+    function loadPhoto(index) {
+      const photo = photos[index];
+      if (!photo) return;
+      const path = `images/${photo.name}-${isMobile ? 'portrait' : 'landscape'}.jpg`;
+      document.body.style.backgroundImage = `url('${path}')`;
+      document.getElementById('categoryText').textContent = photo.category;
+      currentIndex = index;
+      lastLoaded = photo.name;
+    }
+
+    // Laad een willekeurige foto
+    function loadRandomPhoto() {
+      let options = photos.filter(p => (!currentCategory || p.category === currentCategory) && (!currentCategory || !p.filterOnly || currentCategory));
+      if (lastLoaded && options.length > 1) {
+        options = options.filter(p => p.name !== lastLoaded);
+      }
+      const random = options[Math.floor(Math.random() * options.length)];
+      const newIndex = photos.findIndex(p => p.name === random.name);
+      loadPhoto(newIndex);
+    }
+
+    // Volgende/vorige
+    function nextPhoto() {
+      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const cur = photos[currentIndex];
+      const idx = options.findIndex(p => p.name === cur.name);
+      const next = (idx + 1) % options.length;
+      const newIndex = photos.findIndex(p => p.name === options[next].name);
+      loadPhoto(newIndex);
+    }
+
+    function prevPhoto() {
+      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const cur = photos[currentIndex];
+      const idx = options.findIndex(p => p.name === cur.name);
+      const prev = (idx - 1 + options.length) % options.length;
+      const newIndex = photos.findIndex(p => p.name === options[prev].name);
+      loadPhoto(newIndex);
+    }
+
+    // Filter toggle
+    function toggleCategoryFilter() {
+      const el = document.querySelector('.category');
+      const current = photos[currentIndex]?.category;
+      if (currentCategory === current) {
+        currentCategory = null;
+        el.classList.remove('active');
+      } else {
+        currentCategory = current;
+        el.classList.add('active');
+      }
+      loadRandomPhoto();
+    }
+
+    // Cursor en klik-gebieden
+    document.addEventListener('mousemove', (e) => {
+      if (!document.body.classList.contains('desktop')) return;
+      const isLeft = e.clientX < window.innerWidth / 2;
+      document.body.classList.toggle('left-cursor', isLeft);
+      document.body.classList.toggle('right-cursor', !isLeft);
+    });
+
+    document.addEventListener('click', (e) => {
+      const isLeft = e.clientX < window.innerWidth / 2;
+      isLeft ? prevPhoto() : nextPhoto();
+    });
+
+    // Eerste foto laden
+    window.onload = () => {
+      loadRandomPhoto();
+    };
+  </script>
+>>>>>>> experiment-2
 </body>
 </html>
