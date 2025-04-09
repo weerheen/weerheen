@@ -105,6 +105,17 @@
     body.desktop.right-cursor {
       cursor: url('cursor-right.png'), auto;
     }
+
+    .info a {
+  color: inherit;
+  text-decoration: none;
+  transition: border-bottom 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.info a:hover {
+  border-bottom: 2px solid black;
+}
     
     @media (min-width: 769px) {
   .category {
@@ -123,7 +134,7 @@
     <div>Heen en Weer</div>
     <div>creatieve studio</div>
     <div>hallo@heenweer.com</div>
-    <div>@heenweer</div>
+    <a href="https://www.instagram.com/heenweer" target="_blank" rel="noopener noreferrer">@heenweer</a>
     <div>leeuwarden</div>
     <div class="time">00:00:00</div>
   </div>
@@ -137,9 +148,9 @@
   <script>
     // Data voor foto's en categorieën
     const photos = [
-      { name: 'photo1', category: 'VHDG ART MARKET', filterOnly: true },
-      { name: 'photo2', category: 'KIJKGAT', filterOnly: false },
-      { name: 'photo3', category: 'PLATPEDAAL', filterOnly: true },
+      { name: 'photo1', category: 'vhdg art market', filterOnly: true },
+      { name: 'photo2', category: 'kijkgat', filterOnly: false },
+      { name: 'photo3', category: 'platpedaal', filterOnly: true },
       // voeg hier meer foto's toe
     ];
 
