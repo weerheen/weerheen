@@ -207,14 +207,18 @@
 
     // Laad een specifieke foto
     function loadPhoto(index) {
-      const photo = photos[index];
-      if (!photo) return;
-      const path = `images/${photo.name}-${isMobile ? 'portrait' : 'landscape'}.jpg`;
-      document.body.style.backgroundImage = `url('${path}')`;
-      document.getElementById('categoryText').textContent = photo.category;
-      currentIndex = index;
-      lastLoaded = photo.name;
-    }
+  const photo = photos[index];
+  if (!photo) return;
+
+  // Check: als het al dezelfde foto is, doe niks
+  if (lastLoaded === photo.name) return;
+
+  const path = `images/${photo.name}-${isMobile ? 'portrait' : 'landscape'}.jpg`;
+  document.body.style.backgroundImage = `url('${path}')`;
+  document.getElementById('categoryText').textContent = photo.category;
+  currentIndex = index;
+  lastLoaded = photo.name;
+}
 
     // Laad een willekeurige foto
     function loadRandomPhoto() {
@@ -232,7 +236,9 @@
       }
       const random = options[Math.floor(Math.random() * options.length)];
       const newIndex = photos.findIndex(p => p.name === random.name);
-      loadPhoto(newIndex);
+if (newIndex !== currentIndex) {
+  loadPhoto(newIndex);
+}
     }
 
     // Volgende/vorige
