@@ -213,7 +213,13 @@
 
     // Volgende/vorige
     function nextPhoto() {
-      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const options = photos.filter(p => {
+  if (currentCategory) {
+    return p.category === currentCategory;
+  } else {
+    return !p.filterOnly;
+  }
+});
       const cur = photos[currentIndex];
       const idx = options.findIndex(p => p.name === cur.name);
       const next = (idx + 1) % options.length;
@@ -222,7 +228,13 @@
     }
 
     function prevPhoto() {
-      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+const options = photos.filter(p => {
+  if (currentCategory) {
+    return p.category === currentCategory;
+  } else {
+    return !p.filterOnly;
+  }
+});
       const cur = photos[currentIndex];
       const idx = options.findIndex(p => p.name === cur.name);
       const prev = (idx - 1 + options.length) % options.length;
