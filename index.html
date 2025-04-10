@@ -192,7 +192,6 @@
     let currentIndex = -1;
     let currentCategory = null;
     let lastLoaded = null;
-    let selectedFilterCategory = null;
 
     // Detecteer of mobiel of desktop
     const isMobile = window.innerWidth < 768;
@@ -269,20 +268,17 @@ const options = photos.filter(p => {
     // Filter toggle
     function toggleCategoryFilter() {
   const el = document.querySelector('.category');
+  const current = photos[currentIndex]?.category;
 
-  // Als filter al actief is → uitzetten
-  if (currentCategory) {
+  if (currentCategory === current) {
     currentCategory = null;
-    selectedFilterCategory = null;
     el.classList.remove('active');
   } else {
-    // Filter aan op basis van huidige foto
-    selectedFilterCategory = photos[currentIndex]?.category;
-    currentCategory = selectedFilterCategory;
+    currentCategory = current;
     el.classList.add('active');
   }
 
-  // Check of huidige foto nog geldig is
+  // Check of huidige foto nog geldig is onder nieuwe filter
   const isStillValid = photos.filter(p => {
     if (currentCategory) {
       return p.category === currentCategory;
@@ -292,7 +288,7 @@ const options = photos.filter(p => {
   }).some(p => p.name === photos[currentIndex]?.name);
 
   if (!isStillValid) {
-    loadRandomPhoto(); // Alleen nieuwe foto laden als het moet
+    loadRandomPhoto(); // Alleen als huidige niet geldig is
   }
 }
 
