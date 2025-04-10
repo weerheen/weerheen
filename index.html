@@ -194,7 +194,15 @@
 
     // Laad een willekeurige foto
     function loadRandomPhoto() {
-      let options = photos.filter(p => (!currentCategory || p.category === currentCategory) && (!currentCategory || !p.filterOnly || currentCategory));
+      let options = photos.filter(p => {
+  if (currentCategory) {
+    // Filter aan: alleen foto's met juiste categorie
+    return p.category === currentCategory;
+  } else {
+    // Geen filter aan: geen foto's die exclusief voor filter zijn
+    return !p.filterOnly;
+  }
+});
       if (lastLoaded && options.length > 1) {
         options = options.filter(p => p.name !== lastLoaded);
       }
