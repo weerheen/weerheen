@@ -256,25 +256,17 @@ const options = photos.filter(p => {
 
     // Filter toggle
     function toggleCategoryFilter() {
-  const el = document.querySelector('.category');
-  const current = photos[currentIndex]?.category;
-
-  if (currentCategory === current) {
-    // Filter uitzetten: bewaar huidige foto
-    currentCategory = null;
-    el.classList.remove('active');
-    // Geen nieuwe foto laden
-  } else {
-    // Filter aanzetten: toon eerste foto in die categorie
-    currentCategory = current;
-    el.classList.add('active');
-
-    // Zoek de eerste foto van de categorie
-    const firstInCategory = photos.find(p => p.category === currentCategory);
-    const index = photos.findIndex(p => p.name === firstInCategory.name);
-    loadPhoto(index);
-  }
-}
+      const el = document.querySelector('.category');
+      const current = photos[currentIndex]?.category;
+      if (currentCategory === current) {
+        currentCategory = null;
+        el.classList.remove('active');
+      } else {
+        currentCategory = current;
+        el.classList.add('active');
+      }
+      loadRandomPhoto();
+    }
 
     // Cursor en klik-gebieden
     document.addEventListener('mousemove', (e) => {
