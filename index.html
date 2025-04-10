@@ -117,14 +117,15 @@
     }
 
     .info a {
+  display: block;
   color: inherit;
   text-decoration: none;
-  transition: border-bottom 0.2s ease;
-  border-bottom: 2px solid transparent;
+  font-weight: 400;
+  transition: font-weight 0.2s ease;
 }
 
 .info a:hover {
-  border-bottom: 2px solid black;
+  font-weight: 600; /* of 500 als je subtieler wil */
 }
     
     @media (min-width: 769px) {
