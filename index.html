@@ -170,6 +170,16 @@
     let currentCategory = null;
     let lastLoaded = null;
 
+    function getVisiblePhotos() {
+  return photos.filter(p => {
+    if (currentCategory) {
+      return p.category === currentCategory;
+    } else {
+      return !p.filterOnly;
+    }
+  });
+}
+
     // Detecteer of mobiel of desktop
     const isMobile = window.innerWidth < 768;
     document.body.classList.add(isMobile ? 'mobile' : 'desktop');
@@ -194,13 +204,7 @@
 
     // Laad een willekeurige foto
     function loadRandomPhoto() {
-      let options = photos.filter(p => {
-  if (currentCategory) {
-    // Filter aan: alleen foto's met juiste categorie
-    return p.category === currentCategory;
-  } else {
-    // Geen filter aan: geen foto's die exclusief voor filter zijn
-    return !p.filterOnly;
+      let options = getVisiblePhotos();
   }
 });
       if (lastLoaded && options.length > 1) {
@@ -213,7 +217,7 @@
 
     // Volgende/vorige
     function nextPhoto() {
-      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const options = getVisiblePhotos();
       const cur = photos[currentIndex];
       const idx = options.findIndex(p => p.name === cur.name);
       const next = (idx + 1) % options.length;
@@ -222,7 +226,7 @@
     }
 
     function prevPhoto() {
-      const options = photos.filter(p => !currentCategory || p.category === currentCategory);
+      const options = getVisiblePhotos();
       const cur = photos[currentIndex];
       const idx = options.findIndex(p => p.name === cur.name);
       const prev = (idx - 1 + options.length) % options.length;
