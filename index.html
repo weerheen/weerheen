@@ -254,35 +254,24 @@ const options = photos.filter(p => {
       loadPhoto(newIndex);
     }
 
-    function getVisiblePhotos() {
-  return photos.filter(p => {
-    if (currentCategory) {
-      return p.category === currentCategory;
-    } else {
-      return !p.filterOnly;
-    }
-  });
-}
-
+    // Filter toggle
     function toggleCategoryFilter() {
   const el = document.querySelector('.category');
+  const current = photos[currentIndex]?.category;
 
-  const currentPhoto = photos[currentIndex];
-  const selectedCategory = currentPhoto?.category;
-
-  if (currentCategory === selectedCategory) {
-    // 🔓 Filter UIT: behoud huidige foto
+  if (currentCategory === current) {
+    // Filter uitzetten: bewaar huidige foto
     currentCategory = null;
     el.classList.remove('active');
     // Geen nieuwe foto laden
   } else {
-    // 🔒 Filter AAN: laad eerste foto uit deze categorie
-    currentCategory = selectedCategory;
+    // Filter aanzetten: toon eerste foto in die categorie
+    currentCategory = current;
     el.classList.add('active');
 
-    const visiblePhotos = getVisiblePhotos();
-    const firstPhoto = visiblePhotos.find(p => p.category === currentCategory);
-    const index = photos.findIndex(p => p.name === firstPhoto.name);
+    // Zoek de eerste foto van de categorie
+    const firstInCategory = photos.find(p => p.category === currentCategory);
+    const index = photos.findIndex(p => p.name === firstInCategory.name);
     loadPhoto(index);
   }
 }
