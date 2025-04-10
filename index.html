@@ -274,6 +274,7 @@ const options = photos.filter(p => {
 
     // Filter toggle
     function toggleCategoryFilter() {
+<<<<<<< HEAD
   const el = document.querySelector('.category');
 
   // Als filter al actief is → uitzetten
@@ -301,6 +302,19 @@ const options = photos.filter(p => {
     loadRandomPhoto(); // Alleen nieuwe foto laden als het moet
   }
 }
+=======
+      const el = document.querySelector('.category');
+      const current = photos[currentIndex]?.category;
+      if (currentCategory === current) {
+        currentCategory = null;
+        el.classList.remove('active');
+      } else {
+        currentCategory = current;
+        el.classList.add('active');
+      }
+      loadRandomPhoto();
+    }
+>>>>>>> parent of 78e6c3a... Update index.html
 
     // Cursor en klik-gebieden
     document.addEventListener('mousemove', (e) => {
