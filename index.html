@@ -267,30 +267,17 @@ const options = photos.filter(p => {
 
     // Filter toggle
     function toggleCategoryFilter() {
-  const el = document.querySelector('.category');
-  const current = photos[currentIndex]?.category;
-
-  if (currentCategory === current) {
-    currentCategory = null;
-    el.classList.remove('active');
-  } else {
-    currentCategory = current;
-    el.classList.add('active');
-  }
-
-  // Check of huidige foto nog geldig is onder nieuwe filter
-  const isStillValid = photos.filter(p => {
-    if (currentCategory) {
-      return p.category === currentCategory;
-    } else {
-      return !p.filterOnly;
+      const el = document.querySelector('.category');
+      const current = photos[currentIndex]?.category;
+      if (currentCategory === current) {
+        currentCategory = null;
+        el.classList.remove('active');
+      } else {
+        currentCategory = current;
+        el.classList.add('active');
+      }
+      loadRandomPhoto();
     }
-  }).some(p => p.name === photos[currentIndex]?.name);
-
-  if (!isStillValid) {
-    loadRandomPhoto(); // Alleen als huidige niet geldig is
-  }
-}
 
     // Cursor en klik-gebieden
     document.addEventListener('mousemove', (e) => {
