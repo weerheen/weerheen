@@ -311,11 +311,8 @@ const options = photos.filter(p => {
 
     // Eerste foto laden
     window.onload = () => {
-  const options = photos.filter(p => !p.filterOnly);
-  const random = options[Math.floor(Math.random() * options.length)];
-  const index = photos.findIndex(p => p.name === random.name);
-  loadPhoto(index); // ← zet currentIndex goed!
-};
+      loadRandomPhoto();
+    };
   </script>
 </body>
 </html>
