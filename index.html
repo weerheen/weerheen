@@ -244,14 +244,18 @@
 
     // Laad een specifieke foto
     function loadPhoto(index) {
-      const photo = photos[index];
-      if (!photo) return;
-      const path = `images/${photo.name}-${isMobile ? 'portrait' : 'landscape'}.jpg`;
-      document.body.style.backgroundImage = `url('${path}')`;
-      document.getElementById('categoryText').textContent = photo.category;
-      currentIndex = index;
-      lastLoaded = photo.name;
-    }
+    const photo = photos[index];
+    if (!photo) return;
+
+    const ext = photo.type === 'gif' ? 'gif' : 'jpg';
+    const suffix = isMobile ? 'mobile' : 'landscape';
+    const path = `images/${photo.name}-${suffix}.${ext}`;
+
+    document.body.style.backgroundImage = `url('${path}')`;
+    document.getElementById('categoryText').textContent = photo.category;
+    currentIndex = index;
+    lastLoaded = photo.name;
+  }
 
     // Laad een willekeurige foto
     function loadRandomPhoto() {
