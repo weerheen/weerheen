@@ -246,7 +246,11 @@
     function loadPhoto(index) {
       const photo = photos[index];
       if (!photo) return;
-      const path = `images/${photo.name}-${isMobile ? 'portrait' : 'landscape'}.jpg`;
+      const isGif = photo.name.endsWith('.gif');
+      const baseName = isGif ? photo.name.replace('.gif', '') : photo.name;
+      const ext = isGif ? 'gif' : 'jpg';
+      const suffix = isMobile ? 'mobile' : 'landscape';
+      const path = `images/${baseName}-${suffix}.${ext}`;
       document.body.style.backgroundImage = `url('${path}')`;
       document.getElementById('categoryText').textContent = photo.category;
       currentIndex = index;
