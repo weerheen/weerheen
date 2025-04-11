@@ -233,7 +233,7 @@
     let lastLoaded = null;
 
     function preloadImages() {
-    photos.slice(0, 5).forEach(photo => {
+    photos.forEach(photo => {
     const ext = photo.type === 'gif' ? 'gif' : 'jpg';
     const suffixes = ['landscape', 'mobile'];
     suffixes.forEach(suffix => {
