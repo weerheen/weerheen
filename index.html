@@ -131,11 +131,11 @@
   .category {
     font-size: 2rem;
   }
-  .logo-button.left:hover .logo {
+  .logo.left:hover {
     content: url('logo-left-hover.svg');
   }
 
-  .logo-button.right:hover .logo {
+  .logo.right:hover {
     content: url('logo-right-hover.svg');
   }
 }
@@ -174,37 +174,12 @@
   content: url('logo-right-hover.svg');
 }
 
-.logo-button {
-  position: absolute;
-  top: 20px;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.logo-button.left { left: 20px; }
-.logo-button.right { right: 20px; }
-
-.logo-button:focus {
-  outline: 2px solid black; /* visuele focus voor toetsenbordgebruikers */
-}
-
-.logo {
-  width: 40px;
-}
-
   </style>
 </head>
 <body>
   <!-- Logo SVG's -->
-  <button class="logo-button left" onclick="showPopup('popup-left')" aria-label="Toon informatie links">
-    <img src="logo-left.svg" alt="Logo links" class="logo">
-  </button>
-  
-  <button class="logo-button right" onclick="showPopup('popup-right')" aria-label="Toon informatie rechts">
-    <img src="logo-right.svg" alt="Logo rechts" class="logo">
-  </button>
+  <img src="logo-left.svg" class="logo left" alt="logo links" onclick="showPopup('popup-left')">
+  <img src="logo-right.svg" class="logo right" alt="logo rechts" onclick="showPopup('popup-right')">  
 
   <!-- Linksonder tekst -->
   <div class="info">
