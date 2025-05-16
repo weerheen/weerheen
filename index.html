@@ -349,9 +349,22 @@ const options = photos.filter(p => {
     });
 
     document.addEventListener('click', (e) => {
-      const isLeft = e.clientX < window.innerWidth / 2;
-      isLeft ? prevPhoto() : nextPhoto();
-    });
+  const clickedElement = e.target;
+
+  // stop als je klikt op iets interactiefs
+  if (
+    clickedElement.closest('.logo-button') ||
+    clickedElement.closest('.popup-overlay') ||
+    clickedElement.closest('.category') ||
+    clickedElement.closest('.info')
+  ) {
+    return;
+  }
+
+  // anders: navigeer foto’s
+  const isLeft = e.clientX < window.innerWidth / 2;
+  isLeft ? prevPhoto() : nextPhoto();
+});
 
     // Eerste foto laden
     window.onload = () => {
