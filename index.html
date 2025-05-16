@@ -341,9 +341,23 @@ const options = photos.filter(p => {
     }
 
     // Cursor en klik-gebieden
-    document.addEventListener('mousemove', (e) => {
-      if (!document.body.classList.contains('desktop')) return;
-      const isLeft = e.clientX < window.innerWidth / 2;
+    document.addEventListener('click', (e) => {
+  const clickedElement = e.target;
+
+  // stop als je klikt op iets interactiefs
+  if (
+    clickedElement.closest('.logo-button') ||
+    clickedElement.closest('.popup-overlay') ||
+    clickedElement.closest('.category') ||
+    clickedElement.closest('.info')
+  ) {
+    return;
+  }
+
+  // anders: navigeer foto’s
+  const isLeft = e.clientX < window.innerWidth / 2;
+  isLeft ? prevPhoto() : nextPhoto();
+});
       document.body.classList.toggle('left-cursor', isLeft);
       document.body.classList.toggle('right-cursor', !isLeft);
     });
