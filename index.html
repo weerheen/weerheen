@@ -377,48 +377,20 @@ const options = photos.filter(p => {
   preloadImages(); // ← voeg deze regel toe
 };
 
-function showPopup(basePath) {
+    function showPopup(basePath) {
   const isMobile = window.innerWidth < 768;
-  if (isMobile) return; // doe niks op mobiel
-
   const popup = document.querySelector('.popup-overlay');
   const img = document.querySelector('.popup-image');
-  const fullPath = `images/${basePath}-${isMobile ? 'mobile' : 'landscape'}.png`;
-
+  const fullPath = isMobile
+    ? `images/${basePath}-mobile.png`
+    : `images/${basePath}.png`;
   img.src = fullPath;
   popup.style.display = 'flex';
-}
-
-function hidePopupIfHover() {
-  const isMobile = window.innerWidth < 768;
-  if (isMobile) return;
-
-  const popup = document.querySelector('.popup-overlay');
-  popup.style.display = 'none';
 }
 
 function hidePopup() {
   document.querySelector('.popup-overlay').style.display = 'none';
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  const isMobile = window.innerWidth < 768;
-
-  if (!isMobile) {
-    const leftLogo = document.querySelector('.logo.left');
-    const rightLogo = document.querySelector('.logo.right');
-
-    if (leftLogo) {
-      leftLogo.addEventListener('mouseenter', () => showPopup('popup-left'));
-      leftLogo.addEventListener('mouseleave', hidePopupIfHover);
-    }
-
-    if (rightLogo) {
-      rightLogo.addEventListener('mouseenter', () => showPopup('popup-right'));
-      rightLogo.addEventListener('mouseleave', hidePopupIfHover);
-    }
-  }
-});
 
   </script>
 </body>
