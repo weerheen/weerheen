@@ -353,13 +353,15 @@ const options = photos.filter(p => {
 
   // stop als je klikt op iets interactiefs
   if (
-    clickedElement.closest('.logo-button') ||
-    clickedElement.closest('.popup-overlay') ||
-    clickedElement.closest('.category') ||
-    clickedElement.closest('.info')
-  ) {
-    return;
-  }
+  e.target.closest('.logo-button') ||
+  e.target.closest('.popup-overlay') ||
+  e.target.closest('.category') ||
+  e.target.closest('.info') ||
+  e.target.classList.contains('category') ||
+  e.target.closest('.category') !== null
+) {
+  return;
+}
 
   // anders: navigeer foto’s
   const isLeft = e.clientX < window.innerWidth / 2;
