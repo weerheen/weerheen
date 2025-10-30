@@ -178,13 +178,13 @@ body {
 <body>
 <!-- Logo SVG's -->
 <img src="logo-left.svg" class="logo left" alt="logo links" 
-     onclick="showPopup('popup-left')" 
-     onmouseenter="if(window.innerWidth >= 768) showPopup('popup-left')" 
-     onmouseleave="if(window.innerWidth >= 768) hidePopup()">
+     onclick="showPopup('popup-left')"
+     onmouseenter="showPopupOnHover('popup-left')"
+     onmouseleave="hidePopupOnHover()">
 <img src="logo-right.svg" class="logo right" alt="logo rechts" 
-     onclick="showPopup('popup-right')" 
-     onmouseenter="if(window.innerWidth >= 768) showPopup('popup-right')" 
-     onmouseleave="if(window.innerWidth >= 768) hidePopup()"> 
+     onclick="showPopup('popup-right')"
+     onmouseenter="showPopupOnHover('popup-right')"
+     onmouseleave="hidePopupOnHover()">
 
   <!-- Linksonder tekst -->
   <div class="info">
@@ -383,7 +383,9 @@ const options = photos.filter(p => {
   preloadImages(); // ← voeg deze regel toe
 };
 
-    function showPopup(basePath) {
+let hoverTimer = null;
+
+function showPopup(basePath) {
   const isMobile = window.innerWidth < 768;
   const popup = document.querySelector('.popup-overlay');
   const img = document.querySelector('.popup-image');
@@ -394,46 +396,27 @@ const options = photos.filter(p => {
   popup.style.display = 'flex';
 }
 
-let currentPopup = null;
-let popupTimer = null;
-let popupShownTime = null;
-
 function showPopupOnHover(basePath) {
-  if (window.innerWidth < 768) return; // Only for desktop
-  if (currentPopup === basePath) return; // Already showing this popup
+  if (window.innerWidth < 768) return; // Alleen voor desktop
   
-  currentPopup = basePath;
-  popupShownTime = Date.now(); // Onthoud wanneer popup werd getoond
-  
-  const isMobile = window.innerWidth < 768;
-  const popup = document.querySelector('.popup-overlay');
-  const img = document.querySelector('.popup-image');
-  const fullPath = isMobile
-    ? `images/${basePath}-mobile.png`
-    : `images/${basePath}.png`;
-  img.src = fullPath;
-  popup.style.display = 'flex';
+  // Wacht 200 milliseconden voordat popup verschijnt
+  hoverTimer = setTimeout(() => {
+    showPopup(basePath);
+  }, 200);
 }
 
 function hidePopupOnHover() {
-  if (window.innerWidth < 768) return; // Only for desktop
+  if (window.innerWidth < 768) return; // Alleen voor desktop
   
-  const elapsedTime = Date.now() - popupShownTime;
-  const minDisplayTime = 10; // 1 seconde (1000 milliseconden)
+  // Stop de timer als die nog bezig is
+  clearTimeout(hoverTimer);
   
-  if (elapsedTime < minDisplayTime) {
-    // Wacht tot de minimale tijd voorbij is
-    const remainingTime = minDisplayTime - elapsedTime;
-    clearTimeout(popupTimer);
-    popupTimer = setTimeout(() => {
-      currentPopup = null;
-      document.querySelector('.popup-overlay').style.display = 'none';
-    }, remainingTime);
-  } else {
-    // Minimale tijd is al voorbij, sluit direct
-    currentPopup = null;
-    document.querySelector('.popup-overlay').style.display = 'none';
-  }
+  // Sluit popup direct
+  document.querySelector('.popup-overlay').style.display = 'none';
+}
+
+function hidePopup() {
+  document.querySelector('.popup-overlay').style.display = 'none';
 }
 
   </script>
