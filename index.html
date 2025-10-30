@@ -176,9 +176,15 @@ body {
   </style>
 </head>
 <body>
-  <!-- Logo SVG's -->
-  <img src="logo-left.svg" class="logo left" alt="logo links" onclick="showPopup('popup-left')">
-  <img src="logo-right.svg" class="logo right" alt="logo rechts" onclick="showPopup('popup-right')">  
+<!-- Logo SVG's -->
+<img src="logo-left.svg" class="logo left" alt="logo links" 
+     onclick="showPopup('popup-left')" 
+     onmouseenter="if(window.innerWidth >= 768) showPopup('popup-left')" 
+     onmouseleave="if(window.innerWidth >= 768) hidePopup()">
+<img src="logo-right.svg" class="logo right" alt="logo rechts" 
+     onclick="showPopup('popup-right')" 
+     onmouseenter="if(window.innerWidth >= 768) showPopup('popup-right')" 
+     onmouseleave="if(window.innerWidth >= 768) hidePopup()"> 
 
   <!-- Linksonder tekst -->
   <div class="info">
