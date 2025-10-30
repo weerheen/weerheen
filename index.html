@@ -41,17 +41,11 @@
     }
 
     /* Logo SVG's */
-.logo-wrapper {
-  position: absolute;
-  top: 20px;
-  width: 175px;
-  height: 175px; /* zelfde als width voor vierkant gebied */
-}
-
-.logo {
-  width: 100%;
-  height: auto;
-}
+    .logo {
+      position: absolute;
+      top: 20px;
+      width: 175px;
+    }
 
     .logo.left { left: 20px; }
     .logo.center { left: 50%; transform: translateX(-50%); }
@@ -183,12 +177,14 @@ body {
 </head>
 <body>
 <!-- Logo SVG's -->
-<div class="logo-wrapper left" onmouseenter="showPopupOnHover('popup-left')" onmouseleave="hidePopupOnHover()">
-  <img src="logo-left.svg" class="logo" alt="logo links" onclick="showPopup('popup-left')">
-</div>
-<div class="logo-wrapper right" onmouseenter="showPopupOnHover('popup-right')" onmouseleave="hidePopupOnHover()">
-  <img src="logo-right.svg" class="logo" alt="logo rechts" onclick="showPopup('popup-right')">
-</div>
+<img src="logo-left.svg" class="logo left" alt="logo links" 
+     onclick="showPopup('popup-left')"
+     onmouseenter="showPopupOnHover('popup-left')"
+     onmouseleave="hidePopupOnHover()">
+<img src="logo-right.svg" class="logo right" alt="logo rechts" 
+     onclick="showPopup('popup-right')"
+     onmouseenter="showPopupOnHover('popup-right')"
+     onmouseleave="hidePopupOnHover()">
 
   <!-- Linksonder tekst -->
   <div class="info">
@@ -388,7 +384,6 @@ const options = photos.filter(p => {
 };
 
 let hoverTimer = null;
-let isPopupOpen = false;
 
 function showPopup(basePath) {
   const isMobile = window.innerWidth < 768;
@@ -399,17 +394,15 @@ function showPopup(basePath) {
     : `images/${basePath}.png`;
   img.src = fullPath;
   popup.style.display = 'flex';
-  isPopupOpen = true;
 }
 
 function showPopupOnHover(basePath) {
   if (window.innerWidth < 768) return; // Alleen voor desktop
-  if (isPopupOpen) return; // Als popup al open is, doe niks
   
   // Wacht 200 milliseconden voordat popup verschijnt
   hoverTimer = setTimeout(() => {
     showPopup(basePath);
-  }, 200);
+  }, 500);
 }
 
 function hidePopupOnHover() {
@@ -420,12 +413,10 @@ function hidePopupOnHover() {
   
   // Sluit popup direct
   document.querySelector('.popup-overlay').style.display = 'none';
-  isPopupOpen = false;
 }
 
 function hidePopup() {
   document.querySelector('.popup-overlay').style.display = 'none';
-  isPopupOpen = false;
 }
 
   </script>
