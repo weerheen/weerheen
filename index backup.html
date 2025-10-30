@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Open Graph tags voor link previews -->
+<meta property="og:title" content="Heen en Weer">
+<meta property="og:description" content="creatieve studio van Michelle (Heen) en Allert (Weer)">
+<meta property="og:image" content="https://i.postimg.cc/HL8ZPR2D/og-image.png">
+<meta property="og:url" content="https://heenweer.com">
+<meta property="og:type" content="website">
+
+  <title>Heen en Weer</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Basis CSS -->
+  <style>
+    /* Algemene instellingen */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Lexend', sans-serif;
+      color: black;
+    }
+
+    /* Achtergrondfoto */
+    body {
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Logo SVG's */
+    .logo {
+      position: absolute;
+      top: 20px;
+      width: 175px;
+    }
+
+    .logo.left { left: 20px; }
+    .logo.center { left: 50%; transform: translateX(-50%); }
+    .logo.right { right: 20px; }
+
+    /* Tekst linksonder */
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 2rem;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Responsieve tekst */
+    @media (max-width: 768px) {
+  .info,
+  .info > div,
+  .info a,
+  .category {
+    font-size: 1.2rem;
+  }
+}
+
+    /* Tijd apart voor realtime update */
+    .time {
+      display: block;
+    }
+
+    /* Categorie rechts onder */
+    .category {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      border: 1px solid black;
+      padding: 0.4em 0.8em;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category.active {
+      background-color: black;
+      color: white;
+    }
+
+    .category .close {
+      margin-left: 0.6em;
+      font-weight: bold;
+      display: none;
+    }
+
+    .category.active .close {
+      display: inline;
+    }
+
+    /* Aangepaste cursors */
+    body.desktop.left-cursor {
+      cursor: url('cursor-left.png'), auto;
+    }
+
+    body.desktop.right-cursor {
+      cursor: url('cursor-right.png'), auto;
+    }
+
+    .info a {
+  display: block;
+  color: black;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.info a:hover {
+  color: #777777; /* <-- vervang dit met je eigen kleurcode */
+}
+    
+    @media (min-width: 769px) {
+  .category {
+    font-size: 2rem;
+  }
+}
+
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent; /* licht transparant */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.popup-image {
+  max-width: 33vw;
+  max-height: 80vh;
+  pointer-events: none; /* zorgt dat clicks op het plaatje alsnog popup sluiten */
+}
+
+@media (max-width: 768px) {
+  .logo {
+    width: 50px; /* of wat je maar wil voor mobiel */
+  }
+}
+
+@media (min-width: 769px) {
+  .logo-button:hover .logo {
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+}
+
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Logo SVG's -->
+  <img src="logo-left.svg" class="logo left" alt="logo links" onclick="showPopup('popup-left')">
+  <img src="logo-right.svg" class="logo right" alt="logo rechts" onclick="showPopup('popup-right')">  
+
+  <!-- Linksonder tekst -->
+  <div class="info">
+    <div>Heen en Weer</div>
+    <div>creatieve studio</div>
+
+    <a href="mailto:hallo@heenweer.com" target="_blank" rel="noopener noreferrer">
+      hallo@heenweer.com
+    </a>
+  
+    <a href="https://www.instagram.com/heenweer" target="_blank" rel="noopener noreferrer">
+      @heenweer
+    </a>
+  
+    <a href="https://www.google.com/maps?q=Leeuwarden" target="_blank" rel="noopener noreferrer">
+      Leeuwarden
+    </a>
+
+    <div class="time">00:00:00</div>
+  </div>
+
+  <!-- Rechts onder categorie -->
+  <div class="category" onclick="toggleCategoryFilter()">
+    <span id="categoryText">Categorie</span>
+    <span class="close">×</span>
+  </div>
+
+  <div class="popup-overlay" onclick="hidePopup()">
+    <img src="" alt="popup" class="popup-image">
+  </div>
+
+  <script>
+    // Data voor foto's en categorieën
+    const photos = [
+      { name: 'vhdg1', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg2', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg3', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg4', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg5', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg6', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg7', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg8', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg9', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'vhdg10', type: 'jpg', category: 'vhdg art market', filterOnly: false },
+      { name: 'kg1', type: 'jpg', category: 'kijkgat', filterOnly: false },
+      { name: 'kg2', type: 'jpg', category: 'kijkgat', filterOnly: false },
+      { name: 'kg3', type: 'jpg', category: 'kijkgat', filterOnly: false },
+      { name: 'kg4', type: 'jpg', category: 'kijkgat', filterOnly: false },
+      { name: 'kg5', type: 'jpg', category: 'kijkgat', filterOnly: false },
+      { name: 'pp1', type: 'jpg', category: 'platpedaal', filterOnly: false },
+      { name: 'pp2', type: 'jpg', category: 'platpedaal', filterOnly: false },
+      { name: 'pp3', type: 'jpg', category: 'platpedaal', filterOnly: false },
+      { name: 'hw1', type: 'gif', category: 'heen en weer', filterOnly: false },
+      // voeg hier meer foto's toe
+    ];
+
+    let currentIndex = -1;
+    let currentCategory = null;
+    let lastLoaded = null;
+
+    function preloadImages() {
+    photos.forEach(photo => {
+    const ext = photo.type === 'gif' ? 'gif' : 'jpg';
+    const suffixes = ['landscape', 'mobile'];
+    suffixes.forEach(suffix => {
+      const img = new Image();
+      img.src = `images/${photo.name}-${suffix}.${ext}`;
+    });
+  });
+}
+
+    // Detecteer of mobiel of desktop
+    const isMobile = window.innerWidth < 768;
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
+
+    // Toon real-time tijd
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('nl-NL', { hour12: false });
+      document.querySelector('.time').textContent = timeStr;
+    }, 1000);
+
+    // Laad een specifieke foto
+    function loadPhoto(index) {
+    const photo = photos[index];
+    if (!photo) return;
+
+    const ext = photo.type === 'gif' ? 'gif' : 'jpg';
+    const suffix = isMobile ? 'mobile' : 'landscape';
+    const path = `images/${photo.name}-${suffix}.${ext}`;
+
+    document.body.style.backgroundImage = `url('${path}')`;
+    document.getElementById('categoryText').textContent = photo.category;
+    currentIndex = index;
+    lastLoaded = photo.name;
+  }
+
+    // Laad een willekeurige foto
+    function loadRandomPhoto() {
+      let options = photos.filter(p => {
+  if (currentCategory) {
+    // Filter aan: alleen foto's met juiste categorie
+    return p.category === currentCategory;
+  } else {
+    // Geen filter aan: geen foto's die exclusief voor filter zijn
+    return !p.filterOnly;
+  }
+});
+      if (lastLoaded && options.length > 1) {
+        options = options.filter(p => p.name !== lastLoaded);
+      }
+      const random = options[Math.floor(Math.random() * options.length)];
+      const newIndex = photos.findIndex(p => p.name === random.name);
+      loadPhoto(newIndex);
+    }
+
+    // Volgende/vorige
+    function nextPhoto() {
+      const options = photos.filter(p => {
+  if (currentCategory) {
+    return p.category === currentCategory;
+  } else {
+    return !p.filterOnly;
+  }
+});
+      const cur = photos[currentIndex];
+      const idx = options.findIndex(p => p.name === cur.name);
+      const next = (idx + 1) % options.length;
+      const newIndex = photos.findIndex(p => p.name === options[next].name);
+      loadPhoto(newIndex);
+    }
+
+    function prevPhoto() {
+const options = photos.filter(p => {
+  if (currentCategory) {
+    return p.category === currentCategory;
+  } else {
+    return !p.filterOnly;
+  }
+});
+      const cur = photos[currentIndex];
+      const idx = options.findIndex(p => p.name === cur.name);
+      const prev = (idx - 1 + options.length) % options.length;
+      const newIndex = photos.findIndex(p => p.name === options[prev].name);
+      loadPhoto(newIndex);
+    }
+
+    // Filter toggle
+    function toggleCategoryFilter() {
+      const el = document.querySelector('.category');
+      const current = photos[currentIndex]?.category;
+      if (currentCategory === current) {
+        currentCategory = null;
+        el.classList.remove('active');
+      } else {
+        currentCategory = current;
+        el.classList.add('active');
+      }
+    }
+
+    // Cursor en klik-gebieden
+    document.addEventListener('mousemove', (e) => {
+      if (!document.body.classList.contains('desktop')) return;
+      const isLeft = e.clientX < window.innerWidth / 2;
+      document.body.classList.toggle('left-cursor', isLeft);
+      document.body.classList.toggle('right-cursor', !isLeft);
+    });
+
+    document.addEventListener('click', (e) => {
+  const clickedElement = e.target;
+
+  // stop als je klikt op iets interactiefs
+  if (
+  e.target.closest('.logo-button') ||
+  e.target.closest('.popup-overlay') ||
+  e.target.closest('.category') ||
+  e.target.closest('.info') ||
+  e.target.classList.contains('category') ||
+  e.target.closest('.category') !== null
+) {
+  return;
+}
+
+  // anders: navigeer foto’s
+  const isLeft = e.clientX < window.innerWidth / 2;
+  isLeft ? prevPhoto() : nextPhoto();
+});
+
+    // Eerste foto laden
+    window.onload = () => {
+  const options = photos.filter(p => !p.filterOnly);
+  const random = options[Math.floor(Math.random() * options.length)];
+  const index = photos.findIndex(p => p.name === random.name);
+  loadPhoto(index);
+
+  preloadImages(); // ← voeg deze regel toe
+};
+
+    function showPopup(basePath) {
+  const isMobile = window.innerWidth < 768;
+  const popup = document.querySelector('.popup-overlay');
+  const img = document.querySelector('.popup-image');
+  const fullPath = isMobile
+    ? `images/${basePath}-mobile.png`
+    : `images/${basePath}.png`;
+  img.src = fullPath;
+  popup.style.display = 'flex';
+}
+
+function hidePopup() {
+  document.querySelector('.popup-overlay').style.display = 'none';
+}
+
+  </script>
+</body>
+</html>
