@@ -419,7 +419,7 @@ function hidePopupOnHover() {
   if (window.innerWidth < 768) return; // Only for desktop
   
   const elapsedTime = Date.now() - popupShownTime;
-  const minDisplayTime = 1000; // 1 seconde (1000 milliseconden)
+  const minDisplayTime = 10; // 1 seconde (1000 milliseconden)
   
   if (elapsedTime < minDisplayTime) {
     // Wacht tot de minimale tijd voorbij is
