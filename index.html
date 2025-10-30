@@ -384,6 +384,7 @@ const options = photos.filter(p => {
 };
 
 let hoverTimer = null;
+let isPopupOpen = false;
 
 function showPopup(basePath) {
   const isMobile = window.innerWidth < 768;
@@ -394,15 +395,17 @@ function showPopup(basePath) {
     : `images/${basePath}.png`;
   img.src = fullPath;
   popup.style.display = 'flex';
+  isPopupOpen = true;
 }
 
 function showPopupOnHover(basePath) {
   if (window.innerWidth < 768) return; // Alleen voor desktop
+  if (isPopupOpen) return; // Als popup al open is, doe niks
   
   // Wacht 200 milliseconden voordat popup verschijnt
   hoverTimer = setTimeout(() => {
     showPopup(basePath);
-  }, 500);
+  }, 200);
 }
 
 function hidePopupOnHover() {
@@ -413,10 +416,12 @@ function hidePopupOnHover() {
   
   // Sluit popup direct
   document.querySelector('.popup-overlay').style.display = 'none';
+  isPopupOpen = false;
 }
 
 function hidePopup() {
   document.querySelector('.popup-overlay').style.display = 'none';
+  isPopupOpen = false;
 }
 
   </script>
