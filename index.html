@@ -383,14 +383,18 @@ const options = photos.filter(p => {
   preloadImages(); // ← voeg deze regel toe
 };
 
-    function showPopup(basePath) {
+function showPopup(basePath) {
   const isMobile = window.innerWidth < 768;
   const popup = document.querySelector('.popup-overlay');
   const img = document.querySelector('.popup-image');
   const fullPath = isMobile
     ? `images/${basePath}-mobile.png`
     : `images/${basePath}.png`;
-  img.src = fullPath;
+  
+  // Only reload image if it's different from current one
+  if (img.src !== fullPath && !img.src.endsWith(fullPath)) {
+    img.src = fullPath;
+  }
   popup.style.display = 'flex';
 }
 
