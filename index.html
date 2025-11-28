@@ -33,7 +33,7 @@
       font-family: 'Lexend', sans-serif;
       color: black;
       /* VERANDER DEZE WAARDE OM HET LETTERTYPE TE VERKLEINEN/VERGROTEN */
-      font-size: 12px; /* standaard is 16px, probeer bijv. 14px of 18px */
+      font-size: 16px; /* standaard is 16px, probeer bijv. 14px of 18px */
     }
 
     /* Achtergrondfoto */
@@ -99,7 +99,7 @@
     }
 
     .project-info-btn {
-      bottom: calc(20px + 3.2rem + 0.5em); /* MINDER RUIMTE TUSSEN KNOPPEN */
+      bottom: calc(20px + 3.2rem + 0.8em); /* IETS MEER RUIMTE TUSSEN KNOPPEN */
     }
 
     @media (max-width: 768px) {
@@ -109,7 +109,7 @@
       }
       
       .project-info-btn {
-        bottom: calc(20px + 1.9rem + 0.5em); /* MINDER RUIMTE TUSSEN KNOPPEN */
+        bottom: calc(20px + 1.9rem + 0.8em); /* IETS MEER RUIMTE TUSSEN KNOPPEN */
       }
     }
 
@@ -209,33 +209,38 @@
       width: 100%;
       height: 100%;
       background: transparent;
-      justify-content: center;
-      align-items: flex-end; /* TEKST NAAR ONDER */
+      justify-content: flex-end; /* RECHTS UITLIJNEN */
+      align-items: flex-end; /* ONDERAAN */
       z-index: 10000;
-      pointer-events: none; /* VOORKOMT DAT CLICKS OP OVERLAY DOOR GAAN NAAR FOTO NAVIGATIE */
+      pointer-events: none;
     }
 
     .project-info-overlay.active {
       display: flex;
-      pointer-events: auto; /* MAAKT CLICKS MOGELIJK WANNEER ACTIEF */
+      pointer-events: auto;
     }
 
     .project-info-content {
-      background: white; /* verander naar 'white' voor witte achtergrond */
-      max-width: 60%; /* 3/5e van het scherm op desktop */
+      background: transparent; /* verander naar 'white' voor witte achtergrond */
+      width: 40%; /* 2/5e VAN HET SCHERM OP DESKTOP */
       max-height: 80vh;
       overflow-y: auto;
-      padding: 1rem; /* MINDER WITRUIMTE RONDOM TEKST */
-      padding-bottom: 20px; /* ZELFDE AFSTAND ALS KNOPPEN */
+      padding: 1rem;
+      padding-right: 20px; /* ZELFDE AFSTAND ALS KNOPPEN VAN RECHTS */
+      padding-bottom: calc(20px + 3.2rem + 0.8em + 3.2rem + 1.6em); /* RUIMTE VOOR BEIDE KNOPPEN */
       box-sizing: border-box;
       pointer-events: auto;
     }
 
     @media (max-width: 768px) {
+      .project-info-overlay {
+        justify-content: center; /* GECENTREERD OP MOBIEL */
+      }
+      
       .project-info-content {
-        max-width: 90%;
-        padding: 0.75rem; /* MINDER WITRUIMTE RONDOM TEKST */
-        padding-bottom: 20px;
+        width: 90%;
+        padding: 0.75rem;
+        padding-bottom: calc(20px + 1.9rem + 0.8em + 1.9rem + 1.6em); /* RUIMTE VOOR BEIDE KNOPPEN OP MOBIEL */
       }
     }
 
