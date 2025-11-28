@@ -32,6 +32,8 @@
       overflow: hidden;
       font-family: 'Lexend', sans-serif;
       color: black;
+      /* VERANDER DEZE WAARDE OM HET LETTERTYPE TE VERKLEINEN/VERGROTEN */
+      font-size: 16px; /* standaard is 16px, probeer bijv. 14px of 18px */
     }
 
     /* Achtergrondfoto */
@@ -97,7 +99,7 @@
     }
 
     .project-info-btn {
-      bottom: calc(20px + 3.2rem + 1.4em); /* 20px + lettergrootte + line-height */
+      bottom: calc(20px + 3.2rem + 0.5em); /* MINDER RUIMTE TUSSEN KNOPPEN */
     }
 
     @media (max-width: 768px) {
@@ -107,7 +109,7 @@
       }
       
       .project-info-btn {
-        bottom: calc(20px + 1.9rem + 1.4em);
+        bottom: calc(20px + 1.9rem + 0.5em); /* MINDER RUIMTE TUSSEN KNOPPEN */
       }
     }
 
@@ -208,27 +210,32 @@
       height: 100%;
       background: transparent;
       justify-content: center;
-      align-items: center;
+      align-items: flex-end; /* TEKST NAAR ONDER */
       z-index: 10000;
+      pointer-events: none; /* VOORKOMT DAT CLICKS OP OVERLAY DOOR GAAN NAAR FOTO NAVIGATIE */
     }
 
     .project-info-overlay.active {
       display: flex;
+      pointer-events: auto; /* MAAKT CLICKS MOGELIJK WANNEER ACTIEF */
     }
 
     .project-info-content {
-      background: white; /* verander naar 'white' voor witte achtergrond */
+      background: transparent; /* verander naar 'white' voor witte achtergrond */
       max-width: 60%; /* 3/5e van het scherm op desktop */
       max-height: 80vh;
       overflow-y: auto;
-      padding: 2rem;
+      padding: 1rem; /* MINDER WITRUIMTE RONDOM TEKST */
+      padding-bottom: 20px; /* ZELFDE AFSTAND ALS KNOPPEN */
       box-sizing: border-box;
+      pointer-events: auto;
     }
 
     @media (max-width: 768px) {
       .project-info-content {
         max-width: 90%;
-        padding: 1.5rem;
+        padding: 0.75rem; /* MINDER WITRUIMTE RONDOM TEKST */
+        padding-bottom: 20px;
       }
     }
 
@@ -441,6 +448,7 @@
         e.target.closest('.popup-overlay') ||
         e.target.closest('.category') ||
         e.target.closest('.project-info-btn') ||
+        e.target.closest('.project-info-overlay') ||
         e.target.closest('.info') ||
         e.target.classList.contains('category') ||
         e.target.closest('.category') !== null ||
