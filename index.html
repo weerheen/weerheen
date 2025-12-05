@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- Open Graph tags voor link previews -->
   <meta property="og:title" content="Heen en Weer">
@@ -115,6 +115,8 @@
       transition: all 0.2s ease;
       padding: 0;
       line-height: 1;
+      color: black; /* Zwart op alle apparaten */
+      -webkit-tap-highlight-color: transparent; /* Verwijder blauwe highlight op mobiel */
     }
 
     .control-btn:hover {
@@ -162,6 +164,7 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      touch-action: pan-x pan-y; /* Blokkeert dubbel-tap zoom op mobiel */
     }
 
     /* Project info - Laag 0 */
@@ -208,8 +211,8 @@
 
     @media (max-width: 768px) {
       .poster {
-        max-width: 80%;
-        max-height: 60vh;
+        max-width: 24%; /* 80% * 0.3 = 24% (70% kleiner) */
+        max-height: 21vh; /* 60vh * 0.35 = 21vh (ongeveer 65% kleiner) */
       }
     }
   </style>
