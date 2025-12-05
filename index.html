@@ -211,8 +211,8 @@
 
     @media (max-width: 768px) {
       .poster {
-        max-width: 24%; /* 80% * 0.3 = 24% (70% kleiner) */
-        max-height: 21vh; /* 60vh * 0.35 = 21vh (ongeveer 65% kleiner) */
+        max-width: 35%; /* 80% * 0.3 = 24% (70% kleiner) */
+        max-height: 30vh; /* 60vh * 0.35 = 21vh (ongeveer 65% kleiner) */
       }
     }
   </style>
@@ -328,7 +328,7 @@
 
     // Random positie binnen 5% marges
     function getRandomPosition() {
-      const marginPercent = 5;
+      const marginPercent = 20;
       const x = marginPercent + Math.random() * (100 - 2 * marginPercent);
       const y = marginPercent + Math.random() * (100 - 2 * marginPercent);
       return { x, y };
