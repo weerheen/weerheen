@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Open Graph tags voor link previews -->
+  <meta property="og:title" content="Heen en Weer">
+  <meta property="og:description" content="creatieve studio van Michelle (Heen) en Allert (Weer)">
+  <meta property="og:image" content="https://i.postimg.cc/HL8ZPR2D/og-image.png">
+  <meta property="og:url" content="https://heenweer.com">
+  <meta property="og:type" content="website">
+
+  <title>Heen en Weer</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Lexend', sans-serif;
+      color: black;
+      font-size: 16px; /* Pas aan om lettertype te verkleinen/vergroten */
+    }
+
+    /* Achtergrond JPG */
+    body {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Logo SVG's */
+    .logo {
+      position: absolute;
+      top: 20px;
+      width: 175px;
+      z-index: 10000;
+    }
+
+    .logo.left { left: 20px; }
+    .logo.right { right: 20px; }
+
+    @media (max-width: 768px) {
+      .logo {
+        width: 50px;
+      }
+    }
+
+    /* Tekst linksonder */
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 2rem;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    @media (max-width: 768px) {
+      .info,
+      .info > div,
+      .info a {
+        font-size: 1.2rem;
+      }
+    }
+
+    .time {
+      display: block;
+    }
+
+    .info a {
+      display: block;
+      color: black;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .info a:hover {
+      color: #777777;
+    }
+
+    /* + en - knoppen rechtsonder */
+    .control-buttons {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column; /* Boven elkaar */
+      gap: 0.5rem;
+      z-index: 9999;
+    }
+
+    .control-btn {
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem; /* Groter dan de oude omlijning */
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 0;
+      line-height: 1;
+      color: black; /* Zwart op alle apparaten */
+      -webkit-tap-highlight-color: transparent; /* Verwijder blauwe highlight op mobiel */
+    }
+
+    .control-btn:hover {
+      color: #777777;
+    }
+
+    @media (max-width: 768px) {
+      .control-btn {
+        font-size: 3rem;
+      }
+    }
+
+    /* Aangepaste cursors */
+    body.desktop.left-cursor {
+      cursor: url('cursor-left.png'), auto;
+    }
+
+    body.desktop.right-cursor {
+      cursor: url('cursor-right.png'), auto;
+    }
+
+    /* Popup overlay voor logo's */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      justify-content: center;
+      align-items: center;
+      z-index: 10001;
+      cursor: pointer;
+    }
+
+    .popup-image {
+      max-width: 50vw;
+      max-height: 85vh;
+      pointer-events: none;
+    }
+
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      touch-action: pan-x pan-y; /* Blokkeert dubbel-tap zoom op mobiel */
+    }
+
+    /* Project info - Laag 0 */
+    .project-info {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      background: white;
+      padding: 2rem;
+      font-size: 1,4rem;
+      line-height: 1.2;
+      text-align: left;
+      z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .project-info {
+        width: 80%;
+        padding: 1.5rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    /* Poster container */
+    .poster-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .poster {
+      position: absolute;
+      max-width: 60%;
+      max-height: 70vh;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .poster {
+        max-width: 35%; /* 80% * 0.3 = 24% (70% kleiner) */
+        max-height: 30vh; /* 60vh * 0.35 = 21vh (ongeveer 65% kleiner) */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo SVG's -->
+  <img src="logo-left.svg" class="logo left" alt="logo links" onclick="showPopup('popup-left')">
+  <img src="logo-right.svg" class="logo right" alt="logo rechts" onclick="showPopup('popup-right')">
+
+  <!-- Linksonder tekst -->
+  <div class="info">
+    <div>Heen en Weer</div>
+    <div>creatieve studio</div>
+
+    <a href="mailto:hallo@heenweer.com" target="_blank" rel="noopener noreferrer">
+      hallo@heenweer.com
+    </a>
+  
+    <a href="https://www.instagram.com/heenweer" target="_blank" rel="noopener noreferrer">
+      @heenweer
+    </a>
+  
+    <a href="https://www.google.com/maps?q=Leeuwarden" target="_blank" rel="noopener noreferrer">
+      Leeuwarden
+    </a>
+
+    <div class="time">00:00:00</div>
+  </div>
+
+  <!-- + en - knoppen rechtsonder -->
+  <div class="control-buttons">
+    <button class="control-btn" onclick="addPoster()">+</button>
+    <button class="control-btn" onclick="removePoster()">−</button>
+  </div>
+
+  <!-- Project info (Laag 0) -->
+  <div class="project-info" id="projectInfo"></div>
+
+  <!-- Poster container -->
+  <div class="poster-container" id="posterContainer"></div>
+
+  <!-- Popup overlay voor logo's -->
+  <div class="popup-overlay" onclick="hidePopup()">
+    <img src="" alt="popup" class="popup-image">
+  </div>
+
+  <script>
+    // Project data - PAS NAMEN EN AANTAL POSTERS AAN
+    const projects = [
+      { 
+        name: 'Project 1', 
+        posterCount: 10,
+        info: `<strong>Project 1</strong><br><br>Kijkgat is kaartje met een ​​​​​​​gat, als hulpmiddel om mensen beter te leren kijken naar hun directe omgeving. Dit gat leert de gebruiker te framen, focussen, zoeken en te verwonderen. ​​​​​​​Aan de hand van dit concept hebben we workshops gegeven, campagnes opgezet, exposities gehouden en inmiddels zelfs een eigen website gebouwd.`
+      },
+      { 
+        name: 'Project 2', 
+        posterCount: 8,
+        info: `<strong>Project 2</strong><br><br>Beschrijving van project 2.`
+      },
+      { 
+        name: 'Project 3', 
+        posterCount: 12,
+        info: `<strong>Project 3</strong><br><br>Beschrijving van project 3.`
+      },
+      { 
+        name: 'Project 4', 
+        posterCount: 5,
+        info: `<strong>Project 4</strong><br><br>Beschrijving van project 4.`
+      },
+      { 
+        name: 'Project 5', 
+        posterCount: 15,
+        info: `<strong>Project 5</strong><br><br>Beschrijving van project 5.`
+      },
+      { 
+        name: 'Project 6', 
+        posterCount: 7,
+        info: `<strong>Project 6</strong><br><br>Beschrijving van project 6.`
+      },
+      { 
+        name: 'Project 7', 
+        posterCount: 9,
+        info: `<strong>Project 7</strong><br><br>Beschrijving van project 7.`
+      },
+      { 
+        name: 'Project 8', 
+        posterCount: 6,
+        info: `<strong>Project 8</strong><br><br>Beschrijving van project 8.`
+      },
+      { 
+        name: 'Project 9', 
+        posterCount: 11,
+        info: `<strong>Project 9</strong><br><br>Beschrijving van project 9.`
+      }
+    ];
+
+    let currentProjectIndex = 0;
+    let visiblePosterCount = 0;
+    const isMobile = window.innerWidth < 768;
+
+    // Set achtergrond
+    const bgPath = isMobile ? 'images/background-mobile.jpg' : 'images/background-desktop.jpg';
+    document.body.style.backgroundImage = `url('${bgPath}')`;
+
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
+
+    // Toon real-time tijd
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('nl-NL', { hour12: false });
+      document.querySelector('.time').textContent = timeStr;
+    }, 1000);
+
+    // Random positie binnen 5% marges
+    function getRandomPosition() {
+      const marginPercent = 10;
+      const x = marginPercent + Math.random() * (100 - 2 * marginPercent);
+      const y = marginPercent + Math.random() * (100 - 2 * marginPercent);
+      return { x, y };
+    }
+
+    // Random rotatie tussen -10 en 10 graden
+    function getRandomRotation() {
+      return -10 + Math.random() * 20;
+    }
+
+    // Laad project
+    function loadProject(index) {
+      currentProjectIndex = index;
+      visiblePosterCount = 0;
+      
+      const project = projects[currentProjectIndex];
+      
+      // Update project info
+      document.getElementById('projectInfo').innerHTML = project.info;
+      
+      // Clear posters
+      document.getElementById('posterContainer').innerHTML = '';
+    }
+
+    // Voeg poster toe
+    function addPoster() {
+      const project = projects[currentProjectIndex];
+      
+      if (visiblePosterCount >= project.posterCount) {
+        return; // Al alle posters zichtbaar
+      }
+      
+      visiblePosterCount++;
+      
+      const poster = document.createElement('img');
+      poster.className = 'poster';
+      poster.src = `images/project${currentProjectIndex + 1}-poster-${visiblePosterCount}.png`;
+      poster.style.zIndex = visiblePosterCount + 1; // Laag 0 is project info
+      
+      // Random positie en rotatie
+      const pos = getRandomPosition();
+      const rotation = getRandomRotation();
+      
+      poster.style.left = `${pos.x}%`;
+      poster.style.top = `${pos.y}%`;
+      poster.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+      
+      document.getElementById('posterContainer').appendChild(poster);
+    }
+
+    // Verwijder poster
+    function removePoster() {
+      if (visiblePosterCount <= 0) {
+        return; // Geen posters meer om te verwijderen
+      }
+      
+      const container = document.getElementById('posterContainer');
+      const posters = container.querySelectorAll('.poster');
+      
+      if (posters.length > 0) {
+        container.removeChild(posters[posters.length - 1]);
+        visiblePosterCount--;
+      }
+    }
+
+    // Navigatie tussen projecten
+    function nextProject() {
+      currentProjectIndex = (currentProjectIndex + 1) % projects.length;
+      loadProject(currentProjectIndex);
+    }
+
+    function prevProject() {
+      currentProjectIndex = (currentProjectIndex - 1 + projects.length) % projects.length;
+      loadProject(currentProjectIndex);
+    }
+
+    // Cursor en klik-gebieden
+    document.addEventListener('mousemove', (e) => {
+      if (!document.body.classList.contains('desktop')) return;
+      const isLeft = e.clientX < window.innerWidth / 2;
+      document.body.classList.toggle('left-cursor', isLeft);
+      document.body.classList.toggle('right-cursor', !isLeft);
+    });
+
+    document.addEventListener('click', (e) => {
+      // Stop als je klikt op interactieve elementen
+      if (
+        e.target.closest('.logo') ||
+        e.target.closest('.popup-overlay') ||
+        e.target.closest('.control-buttons') ||
+        e.target.closest('.info') ||
+        e.target.closest('.control-btn')
+      ) {
+        return;
+      }
+
+      // Anders: navigeer tussen projecten
+      const isLeft = e.clientX < window.innerWidth / 2;
+      isLeft ? prevProject() : nextProject();
+    });
+
+    // Logo popup functies
+    function showPopup(basePath) {
+      const isMobile = window.innerWidth < 768;
+      const popup = document.querySelector('.popup-overlay');
+      const img = document.querySelector('.popup-image');
+      const fullPath = isMobile
+        ? `images/${basePath}-mobile.png`
+        : `images/${basePath}.png`;
+      img.src = fullPath;
+      popup.style.display = 'flex';
+    }
+
+    function hidePopup() {
+      document.querySelector('.popup-overlay').style.display = 'none';
+    }
+
+    // Start met eerste project
+    window.onload = () => {
+      loadProject(0);
+    };
+  </script>
+</body>
+</html>
