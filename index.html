@@ -270,8 +270,8 @@
       return -10 + Math.random() * 20;
     }
 
-    // Laad project
-    function loadProject(index) {
+// Laad project
+function loadProject(index) {
       currentProjectIndex = index;
       visiblePosterCount = 0;
       
@@ -291,6 +291,9 @@
       
       // Clear posters
       document.getElementById('posterContainer').innerHTML = '';
+
+      // Zorg dat er direct 1 poster wordt geladen bij het openen van het project
+      addPoster();
     }
 
     // Voeg poster toe
