@@ -138,26 +138,28 @@
       touch-action: pan-x pan-y; /* Blokkeert dubbel-tap zoom op mobiel */
     }
 
-    /* Project info - Laag 0 */
+    /* Projecttitel rechtsonder */
     .project-info {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 50%;
-      background: white;
-      padding: 2rem;
-      font-size: 1,4rem;
-      line-height: 1.2;
-      text-align: left;
-      z-index: 1;
+      bottom: 20px;
+      right: 20px;
+      font-size: 1.7rem; /* 15% kleiner dan .info (2rem) */
+      line-height: 1.4;
+      text-align: right;
+      z-index: 9999;
+      color: black;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      display: block;
+    }
+
+    .project-info:hover {
+      color: #777777;
     }
 
     @media (max-width: 768px) {
       .project-info {
-        width: 80%;
-        padding: 1.5rem;
-        font-size: 1.2rem;
+        font-size: 1.02rem; /* 15% kleiner dan .info (1.2rem) */
       }
     }
 
@@ -213,8 +215,8 @@
     <div class="time">00:00:00</div>
   </div>
 
-  <!-- Project info (Laag 0) -->
-  <div class="project-info" id="projectInfo"></div>
+  <!-- Projecttitel rechtsonder -->
+  <a class="project-info" id="projectInfo" target="_blank" rel="noopener noreferrer"></a>
 
   <!-- Poster container -->
   <div class="poster-container" id="posterContainer"></div>
@@ -225,53 +227,17 @@
   </div>
 
   <script>
-    // Project data - PAS NAMEN EN AANTAL POSTERS AAN
+    // Project data - PAS NAMEN, URL EN AANTAL POSTERS AAN
     const projects = [
-      { 
-        name: 'Project 1', 
-        posterCount: 10,
-        info: `<strong>Project 1</strong><br><br>Kijkgat is kaartje met een ​​​​​​​gat, als hulpmiddel om mensen beter te leren kijken naar hun directe omgeving. Dit gat leert de gebruiker te framen, focussen, zoeken en te verwonderen. ​​​​​​​Aan de hand van dit concept hebben we workshops gegeven, campagnes opgezet, exposities gehouden en inmiddels zelfs een eigen website gebouwd.`
-      },
-      { 
-        name: 'Project 2', 
-        posterCount: 8,
-        info: `<strong>Project 2</strong><br><br>Beschrijving van project 2.`
-      },
-      { 
-        name: 'Project 3', 
-        posterCount: 12,
-        info: `<strong>Project 3</strong><br><br>Beschrijving van project 3.`
-      },
-      { 
-        name: 'Project 4', 
-        posterCount: 5,
-        info: `<strong>Project 4</strong><br><br>Beschrijving van project 4.`
-      },
-      { 
-        name: 'Project 5', 
-        posterCount: 15,
-        info: `<strong>Project 5</strong><br><br>Beschrijving van project 5.`
-      },
-      { 
-        name: 'Project 6', 
-        posterCount: 7,
-        info: `<strong>Project 6</strong><br><br>Beschrijving van project 6.`
-      },
-      { 
-        name: 'Project 7', 
-        posterCount: 9,
-        info: `<strong>Project 7</strong><br><br>Beschrijving van project 7.`
-      },
-      { 
-        name: 'Project 8', 
-        posterCount: 6,
-        info: `<strong>Project 8</strong><br><br>Beschrijving van project 8.`
-      },
-      { 
-        name: 'Project 9', 
-        posterCount: 11,
-        info: `<strong>Project 9</strong><br><br>Beschrijving van project 9.`
-      }
+      { name: 'Project 1', posterCount: 10 },
+      { name: 'Project 2', posterCount: 8 },
+      { name: 'Project 3', posterCount: 12 },
+      { name: 'Project 4', posterCount: 5 },
+      { name: 'Project 5', posterCount: 15 },
+      { name: 'Project 6', posterCount: 7 },
+      { name: 'Project 7', posterCount: 9 },
+      { name: 'Project 8', posterCount: 6 },
+      { name: 'Project 9', posterCount: 11 }
     ];
 
     let currentProjectIndex = 0;
@@ -310,9 +276,18 @@
       visiblePosterCount = 0;
       
       const project = projects[currentProjectIndex];
-      
-      // Update project info
-      document.getElementById('projectInfo').innerHTML = project.info;
+      const titleEl = document.getElementById('projectInfo');
+
+      titleEl.textContent = project.name;
+      if (project.url) {
+        titleEl.href = project.url;
+        titleEl.target = '_blank';
+        titleEl.rel = 'noopener noreferrer';
+      } else {
+        titleEl.removeAttribute('href');
+        titleEl.removeAttribute('target');
+        titleEl.removeAttribute('rel');
+      }
       
       // Clear posters
       document.getElementById('posterContainer').innerHTML = '';
@@ -399,7 +374,8 @@
       if (
         e.target.closest('.logo') ||
         e.target.closest('.popup-overlay') ||
-        e.target.closest('.info')
+        e.target.closest('.info') ||
+        e.target.closest('.project-info')
       ) {
         return;
       }
