@@ -92,44 +92,15 @@
       color: #777777;
     }
 
-    /* + en - knoppen rechtsonder */
-    .control-buttons {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column; /* Boven elkaar */
-      gap: 0.5rem;
-      z-index: 9999;
+    /* Aangepaste cursors (kruisvormige kwarten) */
+    body.desktop.top-cursor {
+      cursor: url('cursor-plus.png'), auto;
     }
 
-    .control-btn {
-      border: none;
-      background-color: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 5rem; /* Groter dan de oude omlijning */
-      font-weight: 500;
-      transition: all 0.2s ease;
-      padding: 0;
-      line-height: 1;
-      color: black; /* Zwart op alle apparaten */
-      -webkit-tap-highlight-color: transparent; /* Verwijder blauwe highlight op mobiel */
+    body.desktop.bottom-cursor {
+      cursor: url('cursor-min.png'), auto;
     }
 
-    .control-btn:hover {
-      color: #777777;
-    }
-
-    @media (max-width: 768px) {
-      .control-btn {
-        font-size: 3rem;
-      }
-    }
-
-    /* Aangepaste cursors */
     body.desktop.left-cursor {
       cursor: url('cursor-left.png'), auto;
     }
@@ -240,12 +211,6 @@
     </a>
 
     <div class="time">00:00:00</div>
-  </div>
-
-  <!-- + en - knoppen rechtsonder -->
-  <div class="control-buttons">
-    <button class="control-btn" onclick="addPoster()">+</button>
-    <button class="control-btn" onclick="removePoster()">−</button>
   </div>
 
   <!-- Project info (Laag 0) -->
@@ -405,12 +370,28 @@
       loadProject(currentProjectIndex);
     }
 
+    // Bepaal kwart t.o.v. het midden (kruisvorm: |dx| vs |dy|)
+    function getScreenQuarter(clientX, clientY) {
+      const dx = clientX - window.innerWidth / 2;
+      const dy = clientY - window.innerHeight / 2;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        return dx < 0 ? 'left' : 'right';
+      }
+      return dy < 0 ? 'top' : 'bottom';
+    }
+
+    function setCursorQuarter(quarter) {
+      document.body.classList.toggle('top-cursor', quarter === 'top');
+      document.body.classList.toggle('bottom-cursor', quarter === 'bottom');
+      document.body.classList.toggle('left-cursor', quarter === 'left');
+      document.body.classList.toggle('right-cursor', quarter === 'right');
+    }
+
     // Cursor en klik-gebieden
     document.addEventListener('mousemove', (e) => {
       if (!document.body.classList.contains('desktop')) return;
-      const isLeft = e.clientX < window.innerWidth / 2;
-      document.body.classList.toggle('left-cursor', isLeft);
-      document.body.classList.toggle('right-cursor', !isLeft);
+      setCursorQuarter(getScreenQuarter(e.clientX, e.clientY));
     });
 
     document.addEventListener('click', (e) => {
@@ -418,16 +399,16 @@
       if (
         e.target.closest('.logo') ||
         e.target.closest('.popup-overlay') ||
-        e.target.closest('.control-buttons') ||
-        e.target.closest('.info') ||
-        e.target.closest('.control-btn')
+        e.target.closest('.info')
       ) {
         return;
       }
 
-      // Anders: navigeer tussen projecten
-      const isLeft = e.clientX < window.innerWidth / 2;
-      isLeft ? prevProject() : nextProject();
+      const quarter = getScreenQuarter(e.clientX, e.clientY);
+      if (quarter === 'top') addPoster();
+      else if (quarter === 'bottom') removePoster();
+      else if (quarter === 'left') prevProject();
+      else nextProject();
     });
 
     // Logo popup functies
