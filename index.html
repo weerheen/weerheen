@@ -390,6 +390,19 @@ function loadProject(index) {
       else nextProject();
     });
 
+    // Pijltjestoetsen navigatie voor desktop
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        addPoster();      // Omhoog = Poster toevoegen (+)
+      } else if (e.key === 'ArrowDown') {
+        removePoster();   // Omlaag = Poster verwijderen (-)
+      } else if (e.key === 'ArrowLeft') {
+        prevProject();    // Links = Vorig project
+      } else if (e.key === 'ArrowRight') {
+        nextProject();    // Rechts = Volgend project
+      }
+    });
+
     // Logo popup functies
     function showPopup(basePath) {
       const isMobile = window.innerWidth < 768;
