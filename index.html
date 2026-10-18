@@ -185,8 +185,14 @@
 
     @media (max-width: 768px) {
       .poster {
-        max-width: 50%; /* 80% * 0.3 = 24% (70% kleiner) */
-        max-height: 42vh; /* 60vh * 0.35 = 21vh (ongeveer 65% kleiner) */
+        max-width: 50%; 
+        max-height: 42vh; 
+      }
+
+      /* Specifieke uitzondering om Project 2 posters op mobiel groter te maken */
+      .poster[src*="project1-"] {
+        max-width: 35%;  /* Maak dit getransfer groter of kleiner naar wens */
+        max-height: 30vh;
       }
     }
   </style>
