@@ -277,11 +277,12 @@
       return -10 + Math.random() * 20;
     }
 
-// Laad project
-function loadProject(index) {
-      currentProjectIndex = index;
-      visiblePosterCount = 0;
+// Laad project (waarbij het aantal zichtbare posters behouden blijft)
+    function loadProject(index) {
+      // Onthoud hoeveel posters er nu open staan (of minimaal 1 als het de start is)
+      const previousCount = typeof visiblePosterCount !== 'undefined' ? visiblePosterCount : 1;
       
+      currentProjectIndex = index;
       const project = projects[currentProjectIndex];
       const titleEl = document.getElementById('projectInfo');
 
@@ -296,11 +297,18 @@ function loadProject(index) {
         titleEl.removeAttribute('rel');
       }
       
-      // Clear posters
+      // Clear posters en reset de teller tijdelijk
       document.getElementById('posterContainer').innerHTML = '';
+      visiblePosterCount = 0;
 
-      // Zorg dat er direct 1 poster wordt geladen bij het openen van het project
-      addPoster();
+      // Bepaal hoeveel posters er moeten komen: 
+      // Neem het vorige aantal, maar nooit meer dan het maximum van dit nieuwe project (en minimaal 1)
+      const targetCount = Math.max(1, Math.min(previousCount, project.posterCount));
+
+      // Voeg ze stuk voor stuk toe
+      for (let i = 0; i < targetCount; i++) {
+        addPoster();
+      }
     }
 
     // Voeg poster toe
