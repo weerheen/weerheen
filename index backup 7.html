@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Open Graph tags voor link previews -->
+  <meta property="og:title" content="Heen en Weer">
+  <meta property="og:description" content="creatieve studio van Michelle (Heen) en Allert (Weer)">
+  <meta property="og:image" content="https://i.postimg.cc/HL8ZPR2D/og-image.png">
+  <meta property="og:url" content="https://heenweer.com">
+  <meta property="og:type" content="website">
+
+  <title>Heen en Weer</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Lexend', sans-serif;
+      color: black;
+      font-size: 16px; /* Pas aan om lettertype te verkleinen/vergroten */
+    }
+
+    /* Achtergrond JPG */
+    body {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Logo SVG's */
+    .logo {
+      position: absolute;
+      top: 20px;
+      width: 175px;
+      z-index: 10000;
+    }
+
+    .logo.left { left: 20px; }
+    .logo.right { right: 20px; }
+
+    @media (max-width: 768px) {
+      .logo {
+        width: 50px;
+      }
+    }
+
+    /* Tekst linksonder */
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 2rem;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      z-index: 9999;
+    }
+
+    @media (max-width: 768px) {
+      .info,
+      .info > div,
+      .info a {
+        font-size: 1.2rem;
+      }
+    }
+
+    .time {
+      display: block;
+    }
+
+    .info a {
+      display: block;
+      color: black;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .info a:hover {
+      color: #777777;
+    }
+
+    /* Aangepaste cursors (kruisvormige kwarten) */
+    body.desktop.top-cursor {
+      cursor: url('cursor-plus.png'), auto;
+    }
+
+    body.desktop.bottom-cursor {
+      cursor: url('cursor-min.png'), auto;
+    }
+
+    body.desktop.left-cursor {
+      cursor: url('cursor-left.png'), auto;
+    }
+
+    body.desktop.right-cursor {
+      cursor: url('cursor-right.png'), auto;
+    }
+
+    /* Popup overlay voor logo's */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      justify-content: center;
+      align-items: center;
+      z-index: 10001;
+      cursor: pointer;
+    }
+
+    .popup-image {
+      max-width: 50vw;
+      max-height: 85vh;
+      pointer-events: none;
+    }
+
+    body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      touch-action: pan-x pan-y; /* Blokkeert dubbel-tap zoom op mobiel */
+    }
+
+    /* Projecttitel rechtsonder */
+    .project-info {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 1.7rem; /* 15% kleiner dan .info (2rem) */
+      line-height: 1.4;
+      text-align: right;
+      z-index: 9999;
+      color: black;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      display: block;
+    }
+
+    .project-info:hover {
+      color: #777777;
+    }
+
+    @media (max-width: 768px) {
+      .project-info {
+        font-size: 1.02rem; /* 15% kleiner dan .info (1.2rem) */
+      }
+    }
+
+    /* Poster container */
+    .poster-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .poster {
+      position: absolute;
+      max-width: 60%;
+      max-height: 70vh;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .poster {
+        max-width: 50%; 
+        max-height: 42vh; 
+      }
+
+      /* Specifieke uitzondering om Project 2 posters op mobiel groter te maken */
+      .poster[src*="project1-"] {
+        max-width: 35%;  /* Maak dit getransfer groter of kleiner naar wens */
+        max-height: 30vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo SVG's -->
+  <img src="logo-left.svg" class="logo left" alt="logo links" onclick="showPopup('popup-left')">
+  <img src="logo-right.svg" class="logo right" alt="logo rechts" onclick="showPopup('popup-right')">
+
+  <!-- Linksonder tekst -->
+  <div class="info">
+    <div>Heen en Weer</div>
+    <div>creatieve studio</div>
+
+    <a href="mailto:hallo@heenweer.com" target="_blank" rel="noopener noreferrer">
+      hallo@heenweer.com
+    </a>
+  
+    <a href="https://www.instagram.com/heenweer" target="_blank" rel="noopener noreferrer">
+      @heenweer
+    </a>
+  
+    <a href="https://www.google.com/maps?q=Leeuwarden" target="_blank" rel="noopener noreferrer">
+      Leeuwarden
+    </a>
+
+    <div class="time">00:00:00</div>
+  </div>
+
+  <!-- Projecttitel rechtsonder -->
+  <a class="project-info" id="projectInfo" target="_blank" rel="noopener noreferrer"></a>
+
+  <!-- Poster container -->
+  <div class="poster-container" id="posterContainer"></div>
+
+  <!-- Popup overlay voor logo's -->
+  <div class="popup-overlay" onclick="hidePopup()">
+    <img src="" alt="popup" class="popup-image">
+  </div>
+
+  <script>
+    // Project data - PAS NAMEN, URL EN AANTAL POSTERS AAN
+    const projects = [
+      { name: 'kijkgat', posterCount: 10 },
+      { name: 'Project 2', posterCount: 8 },
+      { name: 'Project 3', posterCount: 12 },
+      { name: 'Project 4', posterCount: 5 },
+      { name: 'Project 5', posterCount: 15 },
+      { name: 'Project 6', posterCount: 7 },
+      { name: 'Project 7', posterCount: 9 },
+      { name: 'Project 8', posterCount: 6 },
+      { name: 'Project 9', posterCount: 11 }
+    ];
+
+    let currentProjectIndex = 0;
+    let visiblePosterCount = 0;
+    const isMobile = window.innerWidth < 768;
+
+    // Set achtergrond
+    const bgPath = isMobile ? 'images/background-mobile.jpg' : 'images/background-desktop.jpg';
+    document.body.style.backgroundImage = `url('${bgPath}')`;
+
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
+
+    // Toon real-time tijd
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('nl-NL', { hour12: false });
+      document.querySelector('.time').textContent = timeStr;
+    }, 1000);
+
+    // Random positie binnen 5% marges
+    function getRandomPosition() {
+      const marginPercent = 10;
+      const x = marginPercent + Math.random() * (100 - 2 * marginPercent);
+      const y = marginPercent + Math.random() * (100 - 2 * marginPercent);
+      return { x, y };
+    }
+
+    // Random rotatie tussen -10 en 10 graden
+    function getRandomRotation() {
+      return -10 + Math.random() * 20;
+    }
+
+// Laad project (waarbij het aantal zichtbare posters behouden blijft)
+    function loadProject(index) {
+      // Onthoud hoeveel posters er nu open staan (of minimaal 1 als het de start is)
+      const previousCount = typeof visiblePosterCount !== 'undefined' ? visiblePosterCount : 1;
+      
+      currentProjectIndex = index;
+      const project = projects[currentProjectIndex];
+      const titleEl = document.getElementById('projectInfo');
+
+      titleEl.textContent = project.name;
+      if (project.url) {
+        titleEl.href = project.url;
+        titleEl.target = '_blank';
+        titleEl.rel = 'noopener noreferrer';
+      } else {
+        titleEl.removeAttribute('href');
+        titleEl.removeAttribute('target');
+        titleEl.removeAttribute('rel');
+      }
+      
+      // Clear posters en reset de teller tijdelijk
+      document.getElementById('posterContainer').innerHTML = '';
+      visiblePosterCount = 0;
+
+      // Bepaal hoeveel posters er moeten komen: 
+      // Neem het vorige aantal, maar nooit meer dan het maximum van dit nieuwe project (en minimaal 1)
+      const targetCount = Math.max(1, Math.min(previousCount, project.posterCount));
+
+      // Voeg ze stuk voor stuk toe
+      for (let i = 0; i < targetCount; i++) {
+        addPoster();
+      }
+    }
+
+    // Voeg poster toe
+    function addPoster() {
+      const project = projects[currentProjectIndex];
+      
+      if (visiblePosterCount >= project.posterCount) {
+        return; // Al alle posters zichtbaar
+      }
+      
+      visiblePosterCount++;
+      
+      const poster = document.createElement('img');
+      poster.className = 'poster';
+      poster.src = `images/project${currentProjectIndex + 1}-poster-${visiblePosterCount}.png`;
+      poster.style.zIndex = visiblePosterCount + 1; // Laag 0 is project info
+      
+      // Random positie en rotatie
+      const pos = getRandomPosition();
+      const rotation = getRandomRotation();
+      
+      poster.style.left = `${pos.x}%`;
+      poster.style.top = `${pos.y}%`;
+      poster.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+      
+      document.getElementById('posterContainer').appendChild(poster);
+    }
+
+    // Verwijder poster
+    function removePoster() {
+      if (visiblePosterCount <= 0) {
+        return; // Geen posters meer om te verwijderen
+      }
+      
+      const container = document.getElementById('posterContainer');
+      const posters = container.querySelectorAll('.poster');
+      
+      if (posters.length > 0) {
+        container.removeChild(posters[posters.length - 1]);
+        visiblePosterCount--;
+      }
+    }
+
+    // Navigatie tussen projecten
+    function nextProject() {
+      currentProjectIndex = (currentProjectIndex + 1) % projects.length;
+      loadProject(currentProjectIndex);
+    }
+
+    function prevProject() {
+      currentProjectIndex = (currentProjectIndex - 1 + projects.length) % projects.length;
+      loadProject(currentProjectIndex);
+    }
+
+    // Bepaal kwart t.o.v. het midden (kruisvorm: |dx| vs |dy|)
+    function getScreenQuarter(clientX, clientY) {
+      const dx = clientX - window.innerWidth / 2;
+      const dy = clientY - window.innerHeight / 2;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        return dx < 0 ? 'left' : 'right';
+      }
+      return dy < 0 ? 'top' : 'bottom';
+    }
+
+    function setCursorQuarter(quarter) {
+      document.body.classList.toggle('top-cursor', quarter === 'top');
+      document.body.classList.toggle('bottom-cursor', quarter === 'bottom');
+      document.body.classList.toggle('left-cursor', quarter === 'left');
+      document.body.classList.toggle('right-cursor', quarter === 'right');
+    }
+
+    // Cursor en klik-gebieden
+    document.addEventListener('mousemove', (e) => {
+      if (!document.body.classList.contains('desktop')) return;
+      setCursorQuarter(getScreenQuarter(e.clientX, e.clientY));
+    });
+
+    document.addEventListener('click', (e) => {
+      // Stop als je klikt op interactieve elementen
+      if (
+        e.target.closest('.logo') ||
+        e.target.closest('.popup-overlay') ||
+        e.target.closest('.info') ||
+        e.target.closest('.project-info')
+      ) {
+        return;
+      }
+
+      const quarter = getScreenQuarter(e.clientX, e.clientY);
+      if (quarter === 'top') addPoster();
+      else if (quarter === 'bottom') removePoster();
+      else if (quarter === 'left') prevProject();
+      else nextProject();
+    });
+
+    // Pijltjestoetsen navigatie voor desktop
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        addPoster();      // Omhoog = Poster toevoegen (+)
+      } else if (e.key === 'ArrowDown') {
+        removePoster();   // Omlaag = Poster verwijderen (-)
+      } else if (e.key === 'ArrowLeft') {
+        prevProject();    // Links = Vorig project
+      } else if (e.key === 'ArrowRight') {
+        nextProject();    // Rechts = Volgend project
+      }
+    });
+
+    // Logo popup functies
+    function showPopup(basePath) {
+      const isMobile = window.innerWidth < 768;
+      const popup = document.querySelector('.popup-overlay');
+      const img = document.querySelector('.popup-image');
+      const fullPath = isMobile
+        ? `images/${basePath}-mobile.png`
+        : `images/${basePath}.png`;
+      img.src = fullPath;
+      popup.style.display = 'flex';
+    }
+
+    function hidePopup() {
+      document.querySelector('.popup-overlay').style.display = 'none';
+    }
+
+    // Start met eerste project
+    window.onload = () => {
+      loadProject(0);
+    };
+  </script>
+</body>
+</html>
