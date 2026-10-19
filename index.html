@@ -320,6 +320,7 @@ const projects = [
     }
 
 // Laad project (waarbij het aantal zichtbare posters behouden blijft)
+    // Laad project (waarbij het aantal zichtbare posters behouden blijft, op basis van de types-lijst)
     function loadProject(index) {
       // Onthoud hoeveel posters er nu open staan (of minimaal 1 als het de start is)
       const previousCount = typeof visiblePosterCount !== 'undefined' ? visiblePosterCount : 1;
@@ -338,6 +339,20 @@ const projects = [
         titleEl.removeAttribute('target');
         titleEl.removeAttribute('rel');
       }
+      
+      // Clear posters en reset de teller tijdelijk
+      document.getElementById('posterContainer').innerHTML = '';
+      visiblePosterCount = 0;
+
+      // Bepaal hoeveel beelden er moeten komen op basis van de types-lijst van dit project
+      const maxCount = project.types ? project.types.length : 1;
+      const targetCount = Math.max(1, Math.min(previousCount, maxCount));
+
+      // Voeg ze stuk voor stuk toe
+      for (let i = 0; i < targetCount; i++) {
+        addPoster();
+      }
+    }
       
       // Clear posters en reset de teller tijdelijk
       document.getElementById('posterContainer').innerHTML = '';
