@@ -234,18 +234,60 @@
   </div>
 
   <script>
-    // Project data - PAS NAMEN, URL EN AANTAL POSTERS AAN
-    const projects = [
-      { name: 'kijkgat', posterCount: 10 },
-      { name: 'Project 2', posterCount: 8 },
-      { name: 'Project 3', posterCount: 12 },
-      { name: 'Project 4', posterCount: 5 },
-      { name: 'Project 5', posterCount: 15 },
-      { name: 'Project 6', posterCount: 7 },
-      { name: 'Project 7', posterCount: 9 },
-      { name: 'Project 8', posterCount: 6 },
-      { name: 'Project 9', posterCount: 11 }
+// Project data: geef per project aan of het een 'poster' (met rotatie) of 'popup' (rechtop) is
+const projects = [
+      { 
+        name: 'kijkgat', 
+        types: ['poster', 'popup', 'poster'] // Voorbeeld: pas dit aan naar jouw bestanden
+      },
+      { 
+        name: 'Project 2', 
+        types: ['poster', 'poster', 'popup'] 
+      },
+      { name: 'Project 3', types: ['poster'] },
+      { name: 'Project 4', types: ['poster'] },
+      { name: 'Project 5', types: ['poster'] },
+      { name: 'Project 6', types: ['poster'] },
+      { name: 'Project 7', types: ['poster'] },
+      { name: 'Project 8', types: ['poster'] },
+      { name: 'Project 9', types: ['poster'] }
     ];
+
+    // Voeg poster of popup toe en bepaal de rotatie automatisch
+    function addPoster() {
+      const project = projects[currentProjectIndex];
+      
+      // Als alle ingestelde beelden van dit project al zichtbaar zijn, stop dan
+      if (!project.types || visiblePosterCount >= project.types.length) {
+        return; 
+      }
+      
+      // Bepaal het type ('poster' of 'popup') op basis van de volgorde
+      const assetType = project.types[visiblePosterCount]; 
+      visiblePosterCount++;
+      
+      const poster = document.createElement('img');
+      poster.className = 'poster';
+      
+      // Pakt automatisch de juiste naam, zoals project1-poster-1.png of project1-popup-2.png
+      poster.src = `images/project${currentProjectIndex + 1}-${assetType}-${visiblePosterCount}.png`;
+      poster.style.zIndex = visiblePosterCount + 1;
+      
+      // Random positie op het scherm voor alle beelden
+      const pos = getRandomPosition();
+      poster.style.left = `${pos.x}%`;
+      poster.style.top = `${pos.y}%`;
+      
+      // ALS HET EEN POPUP IS: RECHTOP (0 DEG), ANDERS: RANDOM ROTATIE
+      if (assetType === 'popup') {
+        poster.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+      } else {
+        const rotation = getRandomRotation();
+        poster.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+      }
+      
+      document.getElementById('posterContainer').appendChild(poster);
+    }
 
     let currentProjectIndex = 0;
     let visiblePosterCount = 0;
