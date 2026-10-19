@@ -235,6 +235,13 @@
 
   <script>
     // Project data - PAS NAMEN, URL EN AANTAL POSTERS AAN
+    //
+    // rotatables (optioneel): per poster true = mag kantelen, false = staat recht.
+    // Positie 1 in de lijst = poster-1.png, positie 2 = poster-2.png, enz.
+    // Geen lijst, of een poster die niet in de lijst staat = kantelt standaard wel.
+    //
+    // Voorbeeld:
+    // { name: 'kijkgat', posterCount: 10, rotatables: [true, false, true, true, false, true, true, true, false, true] },
     const projects = [
       { name: 'kijkgat', posterCount: 10 },
       { name: 'Project 2', posterCount: 8 },
@@ -326,9 +333,14 @@
       poster.src = `images/project${currentProjectIndex + 1}-poster-${visiblePosterCount}.png`;
       poster.style.zIndex = visiblePosterCount + 1; // Laag 0 is project info
       
-      // Random positie en rotatie
+      // Mag deze specifieke poster kantelen?
+      // Alleen een expliciete 'false' zet kantelen uit; al het andere = wel kantelen (fallback)
+      const rotatables = project.rotatables;
+      const canRotate = !Array.isArray(rotatables) || rotatables[visiblePosterCount - 1] !== false;
+      
+      // Random positie en (eventueel) rotatie
       const pos = getRandomPosition();
-      const rotation = getRandomRotation();
+      const rotation = canRotate ? getRandomRotation() : 0;
       
       poster.style.left = `${pos.x}%`;
       poster.style.top = `${pos.y}%`;
